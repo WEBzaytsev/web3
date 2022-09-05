@@ -1,0 +1,51 @@
+# VSCode
+
+/.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+# PHPStorm
+.idea
+
+# WordPress
+*.log
+/wp-*.php
+/index.php
+/xnewsblockrpc.php
+/license.txt
+/readme.htnewsblock
+/sitemap.xnewsblock
+/sitemap.xnewsblock.gz
+
+/backup*
+
+wp-admin/
+wp-includes/
+
+wp-content/*
+!wp-content/themes/
+wp-content/themes/*
+
+!wp-content/plugins/
+wp-content/plugins/*
+
+!wp-content/themes/newsblock/
+!wp-content/themes/newsblock/package-lock.json
+!wp-content/themes/newsblock/composer.lock
+wp-content/themes/newsblock/node_modules/
+wp-content/themes/newsblock/vendor/
+!wp-content/themes/newsblock-child/
+!wp-content/themes/newsblock-child/package-lock.json
+!wp-content/themes/newsblock-child/composer.lock
+wp-content/themes/newsblock-child/node_modules/
+wp-content/themes/newsblock-child/vendor/
