@@ -35,7 +35,7 @@ display: none;
 
 
 /*Вход регистрация и да*/
-.uwp-register-class, .uwp-login-class, .uwp-forgot-class .card-body {
+.uwp-register-class, .uwp-login-class, .uwp-reset-class, .uwp-forgot-class .card-body {
     margin-left: 20%;
     margin-right: 20%;
 }
