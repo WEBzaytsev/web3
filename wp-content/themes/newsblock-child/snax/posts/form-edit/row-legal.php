@@ -16,8 +16,7 @@
 		<?php endif; ?>
 
 		<label>
-			<input type="checkbox" id="snax-post-legal" name="snax-post-legal" required <?php checked( snax_get_field_values( 'legal' ) ); ?> /> <?php esc_html_e( 'I agree with the terms and conditions.', 'snax' ); ?>
-			<?php snax_render_legal_page_link(); ?>
+			<input type="checkbox" id="snax-post-legal" name="snax-post-legal" required <?php checked( snax_get_field_values( 'legal' ) ); ?> /> Подтверждаю, что мой материал соблюдает все <a href="/guide" style="text-decoration: underline;">Правила сообщества</a>
     </label>
 
 
