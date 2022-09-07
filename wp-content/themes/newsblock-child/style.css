@@ -40,6 +40,9 @@ display: none;
     margin-right: 20%;
 }
 
+.bfe-edit-post-button{
+  display: none;
+}
 
 .snax-note .snax-note-icon:before {
     font: 34px/64px snaxicon;
