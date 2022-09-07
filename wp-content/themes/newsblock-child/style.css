@@ -44,6 +44,10 @@ display: none;
   display: none;
 }
 
+.pk-share-buttons-metabar-post .pk-share-buttons-item {
+  padding-left: 21px;
+}
+
 .snax-note .snax-note-icon:before {
     font: 34px/64px snaxicon;
     content: "\e008";
