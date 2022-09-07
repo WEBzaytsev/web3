@@ -21,9 +21,9 @@ get_header(); ?>
             the_title(); ?>
         </h1> -->
 
-        <p class="community-page__excerpt">
-            <?php the_excerpt(); ?>
-        </p>
+        <div class="community-page__excerpt">
+            <?php the_content(); ?>
+        </div>
 
         <!-- <div class="community-page__create-post">
             <a href="/add/" class="community-page__create-post_link"></a>
