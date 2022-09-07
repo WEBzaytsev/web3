@@ -76,7 +76,7 @@
                     if (prop === 'page' && obj.isActive && value > 1) {
                         const btn = obj.loadMoreBtn()
                         const oldButtonHTML = btn.innerHTML;
-                        btn.innerHTML = 'Loading';
+                        btn.innerHTML = 'Загрузка..';
 
                         const nextPage = obj.page + 1;
                         const posts = await getPosts(nextPage, obj.id);
