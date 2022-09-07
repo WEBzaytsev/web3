@@ -33,6 +33,9 @@ a.nav-link.text-decoration-none.uwp-account-notifications {
 display: none;
 }
 
+a.link {
+  text-decoration: underline;
+}
 
 /*Вход регистрация и да*/
 .uwp-register-class, .uwp-login-class, .uwp-reset-class, .uwp-forgot-class .card-body {
