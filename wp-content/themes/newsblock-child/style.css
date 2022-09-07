@@ -97,6 +97,10 @@ display: none;
     margin-bottom: 30px;
 }
 
+.community-page__excerpt a {
+    text-decoration: underline;
+}
+
 .community-page__create-post {
     display: grid;
     grid-template-columns: 70px auto;
