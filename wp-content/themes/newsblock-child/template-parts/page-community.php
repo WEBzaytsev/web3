@@ -15,17 +15,17 @@ get_header(); ?>
     <!--    --><?php //do_action('csco_main_before'); ?>
 
     <div class="community-page__header">
-        <h1 class="community-page__title">
+        <!-- <h1 class="community-page__title">
             <?php
             wp_reset_query();
             the_title(); ?>
-        </h1>
+        </h1> -->
 
         <p class="community-page__excerpt">
             <?php the_excerpt(); ?>
         </p>
 
-        <div class="community-page__create-post">
+        <!-- <div class="community-page__create-post">
             <a href="/add/" class="community-page__create-post_link"></a>
             <figure class="community-page__create-post_img">
                 <img src="<?php echo esc_url(get_avatar_url($user->ID)); ?>"
@@ -37,7 +37,7 @@ get_header(); ?>
             <p class="community-page__create-post_text">
                 <?php esc_html_e('Написать свой текст...'); ?>
             </p>
-        </div>
+        </div> -->
     </div>
 
     <div class="community-page__content"
