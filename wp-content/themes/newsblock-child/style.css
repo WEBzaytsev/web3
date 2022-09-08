@@ -29,9 +29,9 @@ button.snax-button.snax-button-preview {
     display: none;
 }
 
-a.nav-link.text-decoration-none.uwp-account-notifications {
+/* a.nav-link.text-decoration-none.uwp-account-notifications {
 display: none;
-}
+} */
 
 a.link {
   text-decoration: underline;
@@ -51,6 +51,10 @@ a.link {
   padding-left: 21px;
 }
 
+.cs-footer__nav a:hover, .cs-footer__nav a:active, .cs-footer__nav a:focus {
+  color: #7684FA;
+}
+
 .snax-note .snax-note-icon:before {
     font: 34px/64px snaxicon;
     content: "\e008";
@@ -58,9 +62,9 @@ a.link {
     padding-top: 15px;
 }
 
-.uwp_profile_page #uwp-profile-no_tabs {
+/* .uwp_profile_page #uwp-profile-no_tabs {
     display: none;
-}
+} */
 
 
 .abr-posts-template-reviews-1 .abr-post-inner.abr-post-thumbnail {
