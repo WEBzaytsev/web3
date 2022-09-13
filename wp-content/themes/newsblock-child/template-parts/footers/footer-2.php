@@ -19,15 +19,16 @@ $scheme = csco_color_scheme(
 			<div class="cs-footer__col cs-col-left">
 				<div class="cs-footer__inner">
 					<?php csco_component( 'footer_logo' ); ?>
-
-					<?php csco_component( 'footer_social_links' ); ?>
+          <p>Профессиональное бизнес-медиа об экономике и технологиях в Web3. (с) 2022</p>
+					<?php //csco_component( 'footer_social_links' ); ?>
 				</div>
 			</div>
 			<div class="cs-footer__col cs-col-center">
 				<?php csco_component( 'footer_nav_menu', true, array( 'menu_class' => 'cs-nav-grid' ) ); ?>
 			</div>
-			<div class="cs-footer__col cs-col-right">
-				<?php csco_component( 'footer_description' ); ?>
+			 <div class="cs-footer__col "><!--cs-col-right -->
+				<?php //csco_component( 'footer_description' ); ?>
+        <?php csco_component( 'footer_social_links' ); ?>
 			</div>
 		</div>
 	</div>

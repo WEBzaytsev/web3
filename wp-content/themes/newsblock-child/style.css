@@ -67,6 +67,21 @@ a.link {
 } */
 
 
+.snax-toolbar {
+  display: none;
+}
+
+
+.snax-edit-post-row-tags {
+  display: none;
+}
+
+
+a.cs-header__button {
+  margin-left: -60px;
+}
+
+
 .abr-posts-template-reviews-1 .abr-post-inner.abr-post-thumbnail {
     display: none;
 }
