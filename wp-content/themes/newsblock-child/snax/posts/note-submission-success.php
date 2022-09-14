@@ -52,6 +52,7 @@ if (!defined('ABSPATH')) {
                 ?>
             <?php endif; ?>
         </p>
+        <p style="font-size: 16px;">Текст проходит модерацию, скоро вам придет уведомление на Email с решением.</p>
 
         <button class="snax-extend__button"
                 data-close="true">
