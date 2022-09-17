@@ -25,8 +25,6 @@ csco_set_post_view();
 	<meta name="msapplication-TileImage" content="/wp-content/themes/newsblock-child/favicon/mstile-144x144.png">
 	<meta name="theme-color" content="#ffffff">
 	<?php wp_head(); ?>
-  <script>window.yaContextCb = window.yaContextCb || []</script>
-  <script src="https://yandex.ru/ads/system/context.js" async></script>
 </head>
 
 <body <?php body_class(); ?> <?php csco_site_scheme(); ?>>
@@ -55,11 +53,11 @@ if ( function_exists( 'wp_body_open' ) ) {
 
 			<?php do_action( 'csco_site_content_before' ); ?>
 
-			<div <?php csco_site_content_class(); ?>>
+			<?php if( !current_page_is_auth() ): ?><div <?php csco_site_content_class(); ?>><?php endif; ?>
 
 				<?php do_action( 'csco_site_content_start' ); ?>
 
-				<div class="cs-container">
+				<?php if( !current_page_is_auth() ): ?><div class="cs-container"><?php endif; ?>
 
 					<?php do_action( 'csco_main_content_before' ); ?>
 

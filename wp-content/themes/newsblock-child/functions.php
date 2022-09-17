@@ -101,6 +101,15 @@ function csco_child_theme_scripts() {
 
         wp_enqueue_script( 'community-scripts');
     }
+
+    wp_register_script(
+        'profile-scripts',
+        get_stylesheet_directory_uri() . '/js/profile.js',
+        array(),
+        $version,
+        true
+    );
+    wp_enqueue_script( 'profile-scripts');
 }
 
 add_action('wp_enqueue_scripts', 'csco_child_theme_scripts');
@@ -162,4 +171,82 @@ function get_authors_ids(): array
     }
 
     return $excluded_users;
+}
+
+add_action('wp_enqueue_scripts', function() {
+    wp_dequeue_style('userswp');
+    wp_deregister_style('userswp');
+});
+
+function modify_uwp_input_text( $html, $field, $value, $form_type ) {
+    $required = '';
+    if( $field->is_required ) {
+        $required = 'required="required"';
+    }
+    $html = '<div class="user-form__field"><input type="text" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /></div>';
+    return $html;
+}
+add_filter( 'uwp_form_input_html_text', 'modify_uwp_input_text', 10, 4 );
+
+function modify_uwp_input_email( $html, $field, $value, $form_type ) {
+    $required = '';
+    if( $field->is_required ) {
+        $required = 'required="required"';
+    }
+    $html = '<div class="user-form__field"><input type="email" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /></div>';
+    return $html;
+}
+add_filter( 'uwp_form_input_html_email', 'modify_uwp_input_email', 10, 4 );
+
+function modify_uwp_input_password( $html, $field, $value, $form_type ) {
+    $required = '';
+    if( $field->is_required ) {
+        $required = 'required="required"';
+    }
+    $html = '<div class="user-form__field"><div class="user-form__field_password"><input type="password" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /><span></span></div></div>';
+    return $html;
+}
+add_filter( 'uwp_form_input_html_password', 'modify_uwp_input_password', 10, 4 );
+
+function modify_uwp_input_textarea( $html, $field, $value, $form_type ) {
+    $required = '';
+    if( $field->is_required ) {
+        $required = 'required="required"';
+    }
+    $html = '<div class="user-form__field"><textarea name="' . $field->htmlvar_name . '" placeholder="' . $field->site_title . '" ' . $required . '>' . $value . '</textarea></div>';
+    return $html;
+}
+add_filter( 'uwp_form_input_html_textarea', 'modify_uwp_input_textarea', 10, 4 );
+
+function modify_uwp_input_checkbox( $html, $field, $value, $form_type ) {
+    var_dump($field);
+    $html = '<div class="user-form__field"><input type="checkbox" /></div>';
+    return $html;
+}
+add_filter( 'uwp_form_input_html_checkbox', 'modify_uwp_input_checkbox', 10, 4 );
+
+if ( ! function_exists( 'current_page_is_auth' ) ) {
+    function current_page_is_auth() {
+        return in_array( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), ['/login/', '/register/', '/forgot-password/', '/password-reset/'] );
+    }
+}
+
+if ( ! function_exists( 'plural_form' ) ) {
+    function plural_form( $value, $words, $show = true ) {
+        $num = $value % 100;
+        if ( $num > 19 ) { 
+            $num = $num % 10; 
+        }
+        
+        $out = ( $show ) ?  $value . ' ' : '';
+        switch ( $num ) {
+            case 1:  $out .= $words[0]; break;
+            case 2: 
+            case 3: 
+            case 4:  $out .= $words[1]; break;
+            default: $out .= $words[2]; break;
+        }
+        
+        return $out;
+    }
 }
