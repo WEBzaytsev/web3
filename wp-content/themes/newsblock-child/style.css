@@ -471,8 +471,32 @@ body .pld-common-wrap {
     border-radius: 100%;
 }
 .profile-avatar__edit-link {
+    position: relative;
     display: block;
     cursor: pointer;
+}
+.profile-avatar__edit-link:hover:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: url('/wp-content/themes/newsblock-child/images/default-avatar.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    transition: opacity .5s;
+    animation: appear 250ms ease-in-out both;
+}
+.profile-avatar__edit-link:hover:before {
+    content: '';
+}
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 .profile-likes {
 
