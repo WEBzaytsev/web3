@@ -25,6 +25,8 @@ csco_set_post_view();
 	<meta name="msapplication-TileImage" content="/wp-content/themes/newsblock-child/favicon/mstile-144x144.png">
 	<meta name="theme-color" content="#ffffff">
 	<?php wp_head(); ?>
+  <script>window.yaContextCb = window.yaContextCb || []</script>
+<script src="https://yandex.ru/ads/system/context.js" async></script>
 </head>
 
 <body <?php body_class(); ?> <?php csco_site_scheme(); ?>>
