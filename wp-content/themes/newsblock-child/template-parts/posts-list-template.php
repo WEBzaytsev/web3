@@ -1,12 +1,12 @@
 <?php if (have_posts()) : ?>
-    <div class="community-page__posts">
+    <div class="content-tabs__tab-content community-page__posts">
         <?php while (have_posts()) {
             the_post();
             get_template_part('/template-parts/post-template');
         }
         wp_reset_postdata(); ?>
     </div>
-    <button class="community-page__load-more">
+    <button class="load-more">
         <?php esc_html_e('Ещё'); ?>
     </button>
 <?php else: ?>

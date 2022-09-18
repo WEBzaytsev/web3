@@ -62,14 +62,20 @@ add_action( 'manage_posts_custom_column', 'csco_posts_custom_column_views' );
 function csco_child_theme_scripts() {
     $version = csco_get_theme_data( 'Version' );
 
+    wp_register_script(
+        'community-scripts',
+        get_stylesheet_directory_uri() . '/js/community-scripts.js',
+        array(),
+        $version,
+        true
+    );
+
+    $options = [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'get_community_posts' => wp_create_nonce('get_community_posts')
+    ];
+
     if (is_page('community')) {
-        wp_register_script(
-            'community-scripts',
-            get_stylesheet_directory_uri() . '/js/community-page.js',
-            array(),
-            $version,
-            true
-        );
 
         $args = array(
             'post_type' => 'post',
@@ -88,28 +94,36 @@ function csco_child_theme_scripts() {
         $popular_posts_count = query_posts($args + $popular_posts_args);
         $last_posts_count = query_posts($args);
 
-        wp_localize_script(
-            'community-scripts',
-            'options',
-            array(
-                'popular-posts' => count($popular_posts_count),
-                'last-posts' => count($last_posts_count),
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'get_community_posts' => wp_create_nonce('get_community_posts'),
-            )
-        );
+        $options = array_merge( $options, [
+            'popular-posts' => count($popular_posts_count),
+            'last-posts' => count($last_posts_count)
+        ] );
 
-        wp_enqueue_script( 'community-scripts');
     }
 
-    wp_register_script(
-        'profile-scripts',
-        get_stylesheet_directory_uri() . '/js/profile.js',
-        array(),
-        $version,
-        true
+    if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 9 ) == '/profile/' ) {
+        if( function_exists( 'uwp_get_displayed_user' ) ) {
+            $user = uwp_get_displayed_user();
+            if( $user && property_exists( $user, 'data' ) && property_exists( $user->data, 'ID' ) ) {
+                $user_id = $user->data->ID;
+                $posts_count = count_user_posts( $user->ID, 'post', true );
+                $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
+                $options = array_merge( $options, [
+                    'posts' => $posts_count,
+                    'comments' => $comments_count,
+                    'author_id' => $user_id
+                ] );
+            }
+        }
+    }
+
+    wp_localize_script(
+        'community-scripts',
+        'options',
+        $options
     );
-    wp_enqueue_script( 'profile-scripts');
+    wp_enqueue_script( 'community-scripts');
+
 }
 
 add_action('wp_enqueue_scripts', 'csco_child_theme_scripts');
@@ -121,14 +135,21 @@ function get_community_posts() {
 
     $page = filter_input(INPUT_POST, 'pg', FILTER_VALIDATE_INT);
     $tab = filter_input(INPUT_POST, 'tab', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    if( filter_has_var( INPUT_POST, 'author_id') ) {
+        $author_id = filter_input( INPUT_POST, 'author_id', FILTER_VALIDATE_INT );
+    }
 
     $args = array(
         'post_type' => 'post',
         'post_status' => 'publish',
         'posts_per_page' => 5,
         'paged' => (int)$page,
-        'author__not_in' => get_authors_ids(),
     );
+    if( isset( $author_id ) ) {
+        $args[ 'author' ] = $author_id;
+    } else {
+        $args[ 'author__not_in' ] = get_authors_ids();
+    }
 
     $popular_posts_args = array(
         'meta_key' => 'post_views_count',
@@ -217,13 +238,6 @@ function modify_uwp_input_textarea( $html, $field, $value, $form_type ) {
     return $html;
 }
 add_filter( 'uwp_form_input_html_textarea', 'modify_uwp_input_textarea', 10, 4 );
-
-function modify_uwp_input_checkbox( $html, $field, $value, $form_type ) {
-    var_dump($field);
-    $html = '<div class="user-form__field"><input type="checkbox" /></div>';
-    return $html;
-}
-add_filter( 'uwp_form_input_html_checkbox', 'modify_uwp_input_checkbox', 10, 4 );
 
 if ( ! function_exists( 'current_page_is_auth' ) ) {
     function current_page_is_auth() {

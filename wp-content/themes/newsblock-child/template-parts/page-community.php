@@ -40,30 +40,29 @@ get_header(); ?>
         </div> -->
     </div>
 
-    <div class="community-page__content"
+    <div class="content-tabs-frame"
          style="display: none">
 
-        <ul class="community-page__content_tabs"
+        <ul class="content-tabs"
             role="tablist"
             id="tabs-tab">
-            <li class="community-page__content_tab<?php echo !$current_tab || $current_tab == 'last-posts' ? ' active' : ''; ?>"
+            <li class="content-tabs__tab<?php echo !$current_tab || $current_tab == 'last-posts' ? ' content-tabs__tab_active' : ''; ?>"
                 role="presentation">
                 <a href="<?php esc_attr_e('#last-posts') ?>"
-                   class="community-page__content_tab-url">
+                   class="content-tabs__tab-url" data-paginated>
                     <?php esc_html_e('Самые новые'); ?>
                 </a>
             </li>
-            <li class="community-page__content_tab<?php echo $current_tab == 'popular-posts' ? ' active' : ''; ?>"
+            <li class="content-tabs__tab<?php echo $current_tab == 'popular-posts' ? ' content-tabs__tab_active' : ''; ?>"
                 role="presentation">
                 <a href="<?php esc_attr_e('#popular-posts') ?>"
-                   class="community-page__content_tab-url">
+                   class="content-tabs__tab-url" data-paginated>
                     <?php esc_html_e('Самые популярные'); ?>
                 </a>
             </li>
         </ul>
 
-        <div class="community-page__tab-content"
-             style="display: <?php echo !$current_tab || $current_tab == 'last-posts' ? ' block' : 'none'; ?>"
+        <div style="display: <?php echo !$current_tab || $current_tab == 'last-posts' ? ' block' : 'none'; ?>"
              data-page="1"
              id="last-posts">
             <?php
@@ -84,8 +83,7 @@ get_header(); ?>
             get_template_part('/template-parts/posts-list-template'); ?>
         </div>
 
-        <div class="community-page__tab-content"
-             style="display: <?php echo $current_tab == 'popular-posts' ? ' block' : 'none'; ?>"
+        <div style="display: <?php echo $current_tab == 'popular-posts' ? ' block' : 'none'; ?>"
              data-page="1"
              id="popular-posts">
             <?php

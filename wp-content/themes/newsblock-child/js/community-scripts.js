@@ -1,30 +1,32 @@
 (function navTabs() {
     const tabs = [];
-    const content = document.querySelector('.community-page__content');
+    const content = document.querySelector('.content-tabs-frame');
 
     const tabsElems = [
-        ...document.querySelectorAll('.community-page__content_tab-url')
+        ...document.querySelectorAll('.content-tabs__tab-url')
     ];
 
     tabsElems.forEach((t, idx) => {
         const id = t.getAttribute('href').slice(1);
-        const isActive = t.parentElement.classList.contains('active');
+        const isPaginated = t.dataset.hasOwnProperty('paginated') ? true : false;
+        const isActive = t.parentElement.classList.contains('content-tabs__tab_active');
         tabs.push(
             new Proxy({
                 id: id,
                 page: Number((new URL(document.location)).searchParams.get('pg')) || 1,
                 isActive: isActive,
+                isPaginated: isPaginated,
                 block() {
                     return document.querySelector(`#${this.id}`);
                 },
                 content() {
-                    return this.block().querySelector('.community-page__posts');
+                    return this.block().querySelector('.content-tabs__tab-content');
                 },
                 tab() {
                     return document.querySelector(`a[href="#${this.id}"]`);
                 },
                 loadMoreBtn() {
-                    return this.block().querySelector('.community-page__load-more') || false;
+                    return this.block().querySelector('.load-more') || false;
                 },
                 postsCount() {
                     return options[this.id];
@@ -56,17 +58,21 @@
                     const tab = this.tab();
 
                     tab.addEventListener('click', this.tabHandler.bind(this));
-                    if (this.isLastPage()) {
-                        if (this.loadMoreBtn()) {
-                            this.loadMoreBtn().parentElement.removeChild(this.loadMoreBtn());
+                    
+                    if(this.isPaginated) {
+                        if (this.isLastPage()) {
+                            if (this.loadMoreBtn()) {
+                                this.loadMoreBtn().parentElement.removeChild(this.loadMoreBtn());
+                            }
+    
+                            return;
                         }
-
-                        return;
-                    }
-
-                    if (this.loadMoreBtn()) {
-                        const loadMoreBtn = this.loadMoreBtn();
-                        loadMoreBtn.addEventListener('click', this.loadMore.bind(this));
+    
+                        if (this.loadMoreBtn()) {
+                            const loadMoreBtn = this.loadMoreBtn();
+                            loadMoreBtn.addEventListener('click', this.loadMore.bind(this));
+                            loadMoreBtn.style.display = "flex";
+                        }
                     }
                 }
             }, {
@@ -78,7 +84,7 @@
                         const oldButtonHTML = btn.innerHTML;
                         btn.innerHTML = 'Загрузка..';
 
-                        const nextPage = obj.page + 1;
+                        const nextPage = obj.page;
                         const posts = await getPosts(nextPage, obj.id);
 
                         if (posts) {
@@ -103,11 +109,11 @@
                                 }
                             });
 
-                            obj.tab().parentElement.classList.add('active');
+                            obj.tab().parentElement.classList.add('content-tabs__tab_active');
                             obj.block().style.display = 'block';
                             updateUrl(obj.id, obj.page);
                         } else {
-                            obj.tab().parentElement.classList.remove('active');
+                            obj.tab().parentElement.classList.remove('content-tabs__tab_active');
                             obj.block().style.display = 'none';
                         }
                     }
@@ -126,13 +132,15 @@
         this.page = Number(page);
         this.url = new URL(document.location);
 
-        if (this.page < 2) {
+        if (this.isPaginated) {
+            if (this.page < 2) {
 
-            if (this.url.searchParams.get('pg')) {
-                this.url.searchParams.delete('pg');
+                if (this.url.searchParams.get('pg')) {
+                    this.url.searchParams.delete('pg');
+                }
+            } else {
+                this.url.searchParams.set('pg', this.page);
             }
-        } else {
-            this.url.searchParams.set('pg', this.page);
         }
 
         this.url.searchParams.set('tab', tab);
@@ -154,6 +162,9 @@
         sendOptions.body.set('nonce', options.get_community_posts);
         sendOptions.body.set('pg', page);
         sendOptions.body.set('tab', tab);
+        if('author_id' in options) {
+            sendOptions.body.set('author_id', options.author_id);
+        }
 
         try {
             const request = await fetch(url, sendOptions);
@@ -178,6 +189,64 @@
     }
 
     likes();
+
+    const toggle_show_password_triggers = [
+        ...document.querySelectorAll('.user-form__field_password span')
+    ];
+
+    toggle_show_password_triggers.forEach(el => el.addEventListener('click', toggle_show_password));
+
+    function toggle_show_password(e) {
+        let password_input = e.target.previousSibling;
+        if(password_input) {
+            if(password_input.type == 'password') {
+                password_input.type = 'text';
+            } else {
+                password_input.type = 'password';
+            }
+        }
+    }
+
+    const popup_triggers = [
+        ...document.querySelectorAll('.popup-trigger')
+    ];
+    
+    popup_triggers.forEach(el => el.addEventListener('click', activate_popup_events));
+
+    function activate_popup_events(e) {
+        if(!document.querySelector('.overlay')) {
+            document.body.insertAdjacentHTML('beforeend', '<div class="overlay"><div class="spinner"><div></div><div></div><div></div><div></div></div></div>');
+            document.body.style.overflow = 'hidden';
+            document.querySelector('.overlay').addEventListener('click', close_popup);
+        }
+    }
+
+    close_popup = function(e) {
+        let popup = document.querySelector('.popup');
+        if(popup) {
+            if(popup.id == 'uwp-popup-modal-wrap') {
+                popup.display = 'none';
+                placeholder = document.createElement('div');
+                placeholder.id = 'uwp-popup-modal-wrap';
+                placeholder.style.display = 'none';
+                popup.replaceWith(placeholder);
+            } else {
+                popup.remove();
+            }
+            document.querySelector('.overlay').remove();
+            document.body.style.overflowY = 'auto';
+        }
+    }
+
+    const switch_inputs = [
+        ...document.querySelectorAll('.switcher input[type="checkbox"')
+    ];
+    
+    switch_inputs.forEach(el => el.addEventListener('change', change_checkbox_value));
+
+    function change_checkbox_value(e) {
+        e.target.value = +e.target.checked;
+    }
 
     /*
         const tabsWrap = document.getElementById('tabs-tab');
