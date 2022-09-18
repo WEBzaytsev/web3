@@ -73,13 +73,15 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 			?>
 			<div class="content-tabs__tab-content">
 				<?php
-				$paged = isset( $_GET[ 'pg' ] ) ? max( 1, $_GET[ 'pg' ] ) : 1;
+				//$paged = isset( $_GET[ 'pg' ] ) ? max( 1, $_GET[ 'pg' ] ) : 1;
+				$page = $_GET[ 'pg' ] ?? 1;
+				$posts_per_page = $page * 5;
 				$query_args = [
 					'post_type' => 'post',
 					'post_status' => 'publish',
 					'posts_per_page' => 5,
 					'author' => $user->ID,
-					'paged' => $paged,
+					'posts_per_page' => $paged,
 				];
 				$the_query = new WP_Query( $query_args );
 				if ( $the_query && $the_query->have_posts() ) {

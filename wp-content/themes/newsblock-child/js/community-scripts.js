@@ -8,7 +8,7 @@
 
     tabsElems.forEach((t, idx) => {
         const id = t.getAttribute('href').slice(1);
-        const isPaginated = t.dataset.hasOwnProperty('paginated') ? true : false;
+        const isPaginated = t.dataset.hasOwnProperty('paginated');
         const isActive = t.parentElement.classList.contains('content-tabs__tab_active');
         tabs.push(
             new Proxy({
@@ -90,7 +90,7 @@
                         if (posts) {
                             obj.content().insertAdjacentHTML('beforeend', await posts);
                             likes();
-                            updateUrl(obj.id, obj.page);
+                            updateUrl(obj.id, obj.page, obj.isPaginated);
                         }
 
                         if (obj.isLastPage()) {
@@ -111,7 +111,7 @@
 
                             obj.tab().parentElement.classList.add('content-tabs__tab_active');
                             obj.block().style.display = 'block';
-                            updateUrl(obj.id, obj.page);
+                            updateUrl(obj.id, obj.page, obj.isPaginated);
                         } else {
                             obj.tab().parentElement.classList.remove('content-tabs__tab_active');
                             obj.block().style.display = 'none';
@@ -128,13 +128,12 @@
 
     content.style.display = 'block';
 
-    function updateUrl(tab, page = 1) {
+    function updateUrl(tab, page = 1, isPaginated) {
         this.page = Number(page);
         this.url = new URL(document.location);
 
-        if (this.isPaginated) {
+        if (isPaginated) {
             if (this.page < 2) {
-
                 if (this.url.searchParams.get('pg')) {
                     this.url.searchParams.delete('pg');
                 }

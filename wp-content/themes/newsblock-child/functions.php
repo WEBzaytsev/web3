@@ -81,7 +81,7 @@ function csco_child_theme_scripts() {
             'post_type' => 'post',
             'post_status' => 'publish',
             'posts_per_page' => -1,
-            'author__not_in' => array(29),
+            'author__not_in' => get_authors_ids(),
         );
 
         $popular_posts_args = array(
