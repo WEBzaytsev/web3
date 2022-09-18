@@ -47,13 +47,14 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 		<div id="posts" <?php if( $current_tab != 'posts' ): ?>style="display: none;" <?php endif; ?>>
 			<?php
 			if( is_user_logged_in() && ( get_current_user_id() == $user->data->ID ) ) {
-				?>
-					<div class="profile-no-posts">
-						<div class="profile-no-posts__title">Вы пока не написали ни одного материала</div>
-						<p>Здесь публикуются все тексты наших читателей, которые прошли модерацию.<br />Сюда может написать любой, но сначала стоит изучить правила</p>
-					</div>
-				<?php
-				//}
+				if( $posts_count < 1 ) {
+					?>
+						<div class="profile-no-posts">
+							<div class="profile-no-posts__title">Вы пока не написали ни одного материала</div>
+							<p>Здесь публикуются все тексты наших читателей, которые прошли модерацию.<br />Сюда может написать любой, но сначала стоит изучить правила</p>
+						</div>
+					<?php
+				}
 				?>
 				<div class="community-page__create-post profile__create-post">
 					<a href="/add/" class="community-page__create-post_link"></a>
