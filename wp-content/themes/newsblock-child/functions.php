@@ -299,3 +299,92 @@ if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 7 ) == '/user
     add_action( 'init', 'remove_profile_pagination' );
 }
 */
+
+/* Mega Menu overrides */
+require_once get_stylesheet_directory() . '/inc/mega-menu.php';
+
+/* PowerKit overrides */
+require_once get_stylesheet_directory() . '/inc/powerkit.php';
+
+/* Override from parent theme */
+function csco_section_heading( $title, $type = 'full', $echo = true, $class = '', $location = 'default' ) {
+
+    if ( 'full' === $type && is_string( $title ) && ! $title ) {
+        return;
+    }
+
+    $tag   = csco_live_get_theme_mod( 'section_heading_tag', 'div' );
+    $align = csco_live_get_theme_mod( 'section_heading_align', 'halignleft' );
+
+    // For submenu location.
+    $default = csco_live_get_theme_mod( 'section_heading_submenu_default', false );
+
+    if ( ! $default && ( 'submenu' === get_query_var( 'headinglocation' ) || 'submenu' === $location ) ) {
+        $tag   = csco_live_get_theme_mod( 'section_heading_submenu_tag', 'div' );
+        $align = csco_live_get_theme_mod( 'section_heading_submenu_align', 'halignleft' );
+    }
+
+    $class = sprintf( 'is-style-cnvs-block-section-heading-default %s %s ', $align, $class );
+
+    ob_start();
+
+    if ( function_exists( 'cnvs' ) ) {
+
+        if ( 'full' === $type || 'before' === $type ) {
+            echo '<' . esc_html( $tag ) . ' class="cs-section-heading cnvs-block-section-heading ' . esc_html( $class ) . '">';
+
+            echo '<span class="cnvs-section-title"><span>';
+        }
+
+        if ( 'full' === $type ) {
+            echo wp_kses_post( $title );
+        }
+
+        if ( 'full' === $type || 'after' === $type ) {
+            echo '</span></span>';
+
+            echo '</' . esc_html( $tag ) . '>';
+        }
+    } else {
+        if ( 'full' === $type || 'before' === $type ) {
+            echo '<' . esc_html( $tag ) . ' class="cs-section-heading cs-section-heading-common ' . esc_html( $class ) . '">';
+        }
+
+        if ( 'full' === $type ) {
+            echo wp_kses_post( $title );
+        }
+
+        if ( 'full' === $type || 'after' === $type ) {
+            echo '</' . esc_html( $tag ) . '>';
+        }
+    }
+
+    if ( ! $echo ) {
+        return ob_get_clean();
+    } else {
+        ob_end_flush();
+    }
+}
+
+/**
+ * Insert ads after each 5th paragraph in posts
+ */
+function insert_ads_to_posts( $content ) {
+    if( is_single() ) {
+        $parts = explode( '</p>', $content );
+        if( count( $parts ) >= 8 ) {
+            $ad_contents = file_get_contents( get_stylesheet_directory() . '/inc/ad.php' );
+            if( $ad_contents ) {
+                $content = '';
+                foreach( $parts as $key => $part ) {
+                    $content .= $part . '</p>';
+                    if( $key == 4 ) {
+                        $content .= $ad_contents;
+                    }
+                }
+            }
+        }
+    }
+    return $content;
+}
+add_filter( 'the_content', 'insert_ads_to_posts' );
