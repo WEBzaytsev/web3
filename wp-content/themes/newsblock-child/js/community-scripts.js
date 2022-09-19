@@ -126,6 +126,10 @@
         tabs[idx].init();
     });
 
+    if (content) {
+        content.style.display = 'block';
+    }
+
     function updateUrl(tab, page = 1, isPaginated) {
         this.page = Number(page);
         this.url = new URL(document.location);
