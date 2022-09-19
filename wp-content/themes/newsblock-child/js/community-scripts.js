@@ -9,6 +9,7 @@
     tabsElems.forEach((t, idx) => {
         const id = t.getAttribute('href').slice(1);
         const isPaginated = t.dataset.hasOwnProperty('paginated');
+        const type = t.dataset.hasOwnProperty('type') ? t.dataset.type : 'posts';
         const isActive = t.parentElement.classList.contains('content-tabs__tab_active');
         tabs.push(
             new Proxy({
@@ -16,6 +17,7 @@
                 page: Number((new URL(document.location)).searchParams.get('pg')) || 1,
                 isActive: isActive,
                 isPaginated: isPaginated,
+                type: type,
                 block() {
                     return document.querySelector(`#${this.id}`);
                 },
@@ -85,7 +87,7 @@
                         btn.innerHTML = 'Загрузка..';
 
                         const nextPage = obj.page;
-                        const posts = await getPosts(nextPage, obj.id);
+                        const posts = await getPosts(nextPage, obj.id, type);
 
                         if (posts) {
                             obj.content().insertAdjacentHTML('beforeend', await posts);
@@ -152,7 +154,7 @@
         );
     }
 
-    async function getPosts(page = 2, tab = '') {
+    async function getPosts(page = 2, tab = '', type) {
         const url = options.ajax_url;
         const sendOptions = {
             method: 'POST',
@@ -163,6 +165,7 @@
         sendOptions.body.set('nonce', options.get_community_posts);
         sendOptions.body.set('pg', page);
         sendOptions.body.set('tab', tab);
+        sendOptions.body.set('type', type);
         if('author_id' in options) {
             sendOptions.body.set('author_id', options.author_id);
         }

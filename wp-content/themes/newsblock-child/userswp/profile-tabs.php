@@ -39,7 +39,7 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 			<li class="content-tabs__tab content-tabs__tab_with-padding content-tabs__tab_with-icon content-tabs__tab_with-icon_comments<?= ( $current_tab == 'comments' ) ? ' content-tabs__tab_active' : ''; ?>"
 				role="presentation">
 				<a href="#comments"
-					class="content-tabs__tab-url" data-paginated>
+					class="content-tabs__tab-url" data-paginated data-type="comments">
 					<?= plural_form( $comments_count, ['комментарий', 'комментария', 'комментариев'] ) ?>
 				</a>
 			</li>
@@ -86,14 +86,13 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 			<div class="content-tabs__tab-content">
 				<?php
 				//$paged = isset( $_GET[ 'pg' ] ) ? max( 1, $_GET[ 'pg' ] ) : 1;
-				$page = $_GET[ 'pg' ] ?? 1;
+				$page = isset( $_GET[ 'pg' ] ) && isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'posts' ? $_GET[ 'pg' ] : 1;
 				$posts_per_page = $page * 5;
 				$query_args = [
 					'post_type' => 'post',
 					'post_status' => 'publish',
-					'posts_per_page' => 5,
 					'author' => $user->ID,
-					'posts_per_page' => $paged,
+					'posts_per_page' => $posts_per_page,
 				];
 				$the_query = new WP_Query( $query_args );
 				if ( $the_query && $the_query->have_posts() ) {
@@ -113,9 +112,29 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 			</button>
 		</div>
 		<div id="comments" <?php if( $current_tab != 'comments' ): ?>style="display: none;" <?php endif; ?>>
+			<?php if( $comments_count < 1 ): ?>
+				<?php if( is_user_logged_in() && ( get_current_user_id() == $user->data->ID ) ): ?>
+					<div class="profile-no-posts">
+						<div class="profile-no-posts__title">Вы пока не написали ни одного комментария/div>
+					</div>
+				<?php else: ?>
+					<div class="profile-no-posts">
+						<div class="profile-no-posts__title"><?= $user->user_login ?> пока не написал ни одного комментария</div>
+					</div>
+				<?php endif; ?>
+			<?php endif; ?>
 			<div class="content-tabs__tab-content">
-				comments
+				<?php
+				$page = isset( $_GET[ 'pg' ] ) && isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'comments' ? $_GET[ 'pg' ] : 1;
+				$comments = get_comments( [ 'user_id' => $user->ID, 'number' => $page * 5 ] );
+				foreach( $comments as $comment ):
+					get_template_part( '/template-parts/comment-template', null, [ 'comment' => $comment ] );
+				endforeach;
+				?>
 			</div>
+			<button class="load-more">
+				<?php esc_html_e('Ещё'); ?>
+			</button>
 		</div>
 		<?php
 	}

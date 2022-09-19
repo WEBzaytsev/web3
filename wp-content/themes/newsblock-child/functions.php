@@ -117,6 +117,14 @@ function csco_child_theme_scripts() {
         }
     }
 
+    /*
+    if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 7 ) == '/users/' ) {
+        $options = array_merge( $options, [
+            'new-users' => count_users(),
+        ] );
+    }
+    */
+
     wp_localize_script(
         'community-scripts',
         'options',
@@ -135,41 +143,51 @@ function get_community_posts() {
 
     $page = filter_input(INPUT_POST, 'pg', FILTER_VALIDATE_INT);
     $tab = filter_input(INPUT_POST, 'tab', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     if( filter_has_var( INPUT_POST, 'author_id') ) {
         $author_id = filter_input( INPUT_POST, 'author_id', FILTER_VALIDATE_INT );
     }
 
-    $args = array(
-        'post_type' => 'post',
-        'post_status' => 'publish',
-        'posts_per_page' => 5,
-        'paged' => (int)$page,
-    );
-    if( isset( $author_id ) ) {
-        $args[ 'author' ] = $author_id;
-    } else {
-        $args[ 'author__not_in' ] = get_authors_ids();
-    }
-
-    $popular_posts_args = array(
-        'meta_key' => 'post_views_count',
-        'orderby' => 'meta_value_num',
-        'meta_type' => 'NUMERIC',
-        'order' => 'DESC'
-    );
-
-    if ($tab == 'popular-posts') {
-        $args = $args + $popular_posts_args;
-    }
-
-    $posts = query_posts($args);
-
-    if (have_posts()) {
-        while (have_posts()) {
-            the_post();
-            get_template_part('/template-parts/post-template');
+    if( $type == 'comments' ) {
+        $comments = get_comments( [ 'user_id' => $author_id, 'number' => 5, 'offset' => ( $page - 1 ) * 5 ] );
+        if( $comments ) {
+            foreach( $comments as $comment ):
+                get_template_part( '/template-parts/comment-template', null, [ 'comment' => $comment ] );
+            endforeach;
         }
-        wp_reset_postdata();
+    } else {
+        $args = array(
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'posts_per_page' => 5,
+            'paged' => (int)$page,
+        );
+        if( isset( $author_id ) ) {
+            $args[ 'author' ] = $author_id;
+        } else {
+            $args[ 'author__not_in' ] = get_authors_ids();
+        }
+    
+        $popular_posts_args = array(
+            'meta_key' => 'post_views_count',
+            'orderby' => 'meta_value_num',
+            'meta_type' => 'NUMERIC',
+            'order' => 'DESC'
+        );
+    
+        if ($tab == 'popular-posts') {
+            $args = $args + $popular_posts_args;
+        }
+    
+        $posts = query_posts($args);
+    
+        if (have_posts()) {
+            while (have_posts()) {
+                the_post();
+                get_template_part('/template-parts/post-template');
+            }
+            wp_reset_postdata();
+        }
     }
 
     die();
@@ -264,3 +282,20 @@ if ( ! function_exists( 'plural_form' ) ) {
         return $out;
     }
 }
+
+/* Remove userswp pagination from user list as we use custom ajax pagination */
+/*
+if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 7 ) == '/users/' ) {
+    function remove_profile_pagination() {
+        global $wp_filter;
+        if( isset( $wp_filter[ 'uwp_profile_pagination' ] ) ) {
+            foreach( $wp_filter[ 'uwp_profile_pagination' ]->callbacks as $priority => $hook) {
+                foreach( $hook as $name => $params ) {
+                    remove_action( 'uwp_profile_pagination', $wp_filter[ 'uwp_profile_pagination' ][ $priority ][ $name ][ 'function' ], $priority );
+                }
+            }
+        }
+    }
+    add_action( 'init', 'remove_profile_pagination' );
+}
+*/
