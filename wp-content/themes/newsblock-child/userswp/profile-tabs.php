@@ -64,23 +64,23 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 					</div>
 					<?php
 				}
-				if( is_user_logged_in() ) {
-					?>
-					<div class="community-page__create-post profile__create-post">
-						<a href="/add/" class="community-page__create-post_link"></a>
-						<figure class="community-page__create-post_img">
-							<img src="<?php echo esc_url( $avatar_url ); ?>"
-									alt="avatar"
-									loading="lazy"
-									width="40"
-									height="40">
-						</figure>
-						<p class="community-page__create-post_text">
-							<?php esc_html_e('Написать свой текст...'); ?>
-						</p>
-					</div>
-					<?php
-				}
+			}
+			if( is_user_logged_in() ) {
+				?>
+				<div class="community-page__create-post profile__create-post">
+					<a href="/add/" class="community-page__create-post_link"></a>
+					<figure class="community-page__create-post_img">
+						<img src="<?php echo esc_url( $avatar_url ); ?>"
+								alt="avatar"
+								loading="lazy"
+								width="40"
+								height="40">
+					</figure>
+					<p class="community-page__create-post_text">
+						<?php esc_html_e('Написать свой текст...'); ?>
+					</p>
+				</div>
+				<?php
 			}
 			?>
 			<div class="content-tabs__tab-content">
