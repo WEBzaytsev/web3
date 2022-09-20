@@ -1205,7 +1205,13 @@ input:checked + .slider:before {
 }
 .user-card__description {
     display: block;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
     line-height: 24px;
+    line-clamp: 7;
+    -webkit-line-clamp: 7;
 }
 .user-card__actions {
     margin-top: 24px;
