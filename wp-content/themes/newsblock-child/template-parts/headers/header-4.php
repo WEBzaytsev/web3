@@ -12,6 +12,51 @@ $scheme = csco_color_scheme(
 ?>
 
 <header class="cs-header cs-header-stretch cs-header-four" <?php echo wp_kses( $scheme, 'post' ); ?>>
+<!--AdFox START-->
+<!--yandex_web3adv-->
+<!--Площадка: Web3 / Desktop / Перетяжка 100%*200px-->
+<!--Категория: <не задана>-->
+<!--Тип баннера: Billboard-->
+<div id="adfox_166291109391615849"></div>
+<script>
+    window.yaContextCb.push(()=>{
+        Ya.adfoxCode.createAdaptive({
+            ownerId: 706490,
+            containerId: 'adfox_166291109391615849',
+            params: {
+                p1: 'cvslz',
+                p2: 'hvhv'
+            }
+        }, ['desktop', 'tablet'], {
+            tabletWidth: 830,
+            phoneWidth: 480,
+            isAutoReloads: false
+        })
+    })
+</script>
+
+<!--AdFox START-->
+<!--yandex_web3adv-->
+<!--Площадка: Web3 / Mobile / Mobile Перетяжка 100%*200px-->
+<!--Категория: <не задана>-->
+<!--Тип баннера: Mobile-->
+<div id="adfox_166291111123671898"></div>
+<script>
+    window.yaContextCb.push(()=>{
+        Ya.adfoxCode.createAdaptive({
+            ownerId: 706490,
+            containerId: 'adfox_166291111123671898',
+            params: {
+                p1: 'cvsme',
+                p2: 'hvie'
+            }
+        }, ['phone'], {
+            tabletWidth: 830,
+            phoneWidth: 480,
+            isAutoReloads: false
+        })
+    })
+</script>
 	<div class="cs-container">
 		<div class="cs-header__inner-wrapper cs-header__inner-desktop">
 			<div class="cs-header__col cs-col-left">
