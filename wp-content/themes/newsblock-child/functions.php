@@ -253,6 +253,10 @@ function modify_uwp_input_password( $html, $field, $value, $form_type ) {
         $required = 'required="required"';
     }
     $html = '<div class="user-form__field"><div class="user-form__field_password"><input type="password" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /><span></span></div></div>';
+    if( $form_type == 'register' && array_key_exists( 'extra_fields', $field ) ) {
+        $extra_fields = unserialize( $field->extra_fields );
+        $html .= '<div class="user-form__field"><div class="user-form__field_password"><input type="password" name="' . array_key_first( $extra_fields ) . '" value="' . $value . '" placeholder="Повторите ' . strtolower( $field->site_title ) . '" ' . $required . ' /><span></span></div></div>';
+    }
     return $html;
 }
 add_filter( 'uwp_form_input_html_password', 'modify_uwp_input_password', 10, 4 );
