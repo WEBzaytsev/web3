@@ -117,13 +117,11 @@ function csco_child_theme_scripts() {
         }
     }
 
-    /*
     if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 7 ) == '/users/' ) {
         $options = array_merge( $options, [
-            'new-users' => count_users(),
+            'new-users' => count_users()[ 'total_users' ],
         ] );
     }
-    */
 
     wp_localize_script(
         'community-scripts',
@@ -153,6 +151,18 @@ function get_community_posts() {
         if( $comments ) {
             foreach( $comments as $comment ):
                 get_template_part( '/template-parts/comment-template', null, [ 'comment' => $comment ] );
+            endforeach;
+        }
+    } elseif( $type == 'users' ) {
+        $users = get_users( [
+            'orderby' => 'registered',
+            'order' => 'DESC',
+            'number' => 10,
+            'offset' => ( $page - 1 ) * 10
+        ] );
+        if( $users ) {
+            foreach( $users as $user ):
+                get_template_part( '/template-parts/user-card', null, [ 'user' => $user ] );
             endforeach;
         }
     } else {
@@ -284,7 +294,6 @@ if ( ! function_exists( 'plural_form' ) ) {
 }
 
 /* Remove userswp pagination from user list as we use custom ajax pagination */
-/*
 if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 7 ) == '/users/' ) {
     function remove_profile_pagination() {
         global $wp_filter;
@@ -298,7 +307,6 @@ if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 7 ) == '/user
     }
     add_action( 'init', 'remove_profile_pagination' );
 }
-*/
 
 /* Mega Menu overrides */
 require_once get_stylesheet_directory() . '/inc/mega-menu.php';
