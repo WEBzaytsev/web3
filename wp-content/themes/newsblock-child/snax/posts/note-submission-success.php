@@ -26,9 +26,9 @@ if (!defined('ABSPATH')) {
 
 
         <?php if (1 === snax_get_user_post_count()) : ?>
-            <h2 class="snax-note-title"><?php esc_html_e('You\'ve submitted your first post!', 'snax'); ?></h2>
+            <h2 class="snax-note-title">Спасибо за первую публикацию! Она на модерации</h2>
         <?php else : ?>
-            <h2 class="snax-note-title"><?php esc_html_e('Thank you for submitting!', 'snax'); ?></h2>
+            <h2 class="snax-note-title">Ваша публикация на модерации</h2>
         <?php endif; ?>
 
         <p class="snax-extend__text">
@@ -52,7 +52,7 @@ if (!defined('ABSPATH')) {
                 ?>
             <?php endif; ?>
         </p>
-        <p style="font-size: 16px;">Текст проходит модерацию, скоро вам придет уведомление на Email с решением.</p>
+        <p style="font-size: 16px;">Мы проверим её на предмет соответствия Правилам сообщества и пришлем уведомление на почту, когда она будет доступна для всех.</p>
 
         <button class="snax-extend__button"
                 data-close="true">
