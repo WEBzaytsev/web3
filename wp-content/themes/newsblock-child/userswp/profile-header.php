@@ -49,7 +49,7 @@ $in_account_settings = ( substr( get_page_link(), -9 ) == '/account/' ) ? true :
 			</div>
 		<?php else: ?>
 			<div class="profile-likes">
-				<a class="profile-likes__link">17</a>
+				<?= do_shortcode('[trianulla_like type="user" id="' . $user->ID . '"]') ?>
 			</div>
 		<?php endif; ?>
 	</div>

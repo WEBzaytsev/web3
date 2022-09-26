@@ -120,6 +120,7 @@ function csco_child_theme_scripts() {
     if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 7 ) == '/users/' ) {
         $options = array_merge( $options, [
             'new-users' => count_users()[ 'total_users' ],
+            'popular-users' => count_users()[ 'total_users' ],
         ] );
     }
 
@@ -179,10 +180,18 @@ function get_community_posts() {
         }
     
         $popular_posts_args = array(
-            'meta_key' => 'post_views_count',
             'orderby' => 'meta_value_num',
-            'meta_type' => 'NUMERIC',
-            'order' => 'DESC'
+            'meta_query' => [
+                'relation' => 'OR',
+                [
+                    'key' => '_trianulla_like_count',
+                    'compare' => 'NOT EXISTS',
+                ],
+                [
+                    'key' => '_trianulla_like_count',
+                    'compare' => 'EXISTS',
+                ],
+            ],
         );
     
         if ($tab == 'popular-posts') {
@@ -225,7 +234,9 @@ function get_authors_ids(): array
 add_action('wp_enqueue_scripts', function() {
     wp_dequeue_style('userswp');
     wp_deregister_style('userswp');
-});
+    wp_dequeue_style('bfe-block-style');
+    wp_deregister_style('bfe-block-style');
+}, 999);
 
 function modify_uwp_input_text( $html, $field, $value, $form_type ) {
     $required = '';

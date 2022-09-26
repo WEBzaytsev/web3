@@ -64,7 +64,8 @@ $post_views = csco_get_post_view();
     </section>
     <footer class="community-page__post_footer">
         <div class="community-page__post_likes">
-            <?php echo do_shortcode('[posts_like_dislike id=' . $post->ID . ']'); ?>
+            <?= do_shortcode('[trianulla_like type="post" id="' . $post->ID . '"]') ?>
+            <!--<?php echo do_shortcode('[posts_like_dislike id=' . $post->ID . ']'); ?>-->
         </div>
         <a href="<?php echo esc_url(get_permalink()); ?>#comments"
            class="community-page__post_comments">

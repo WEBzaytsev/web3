@@ -52,4 +52,34 @@ if ( isset( $_GET['tab'] ) ) {
     </button>
 </div>
 <div id="popular-users" <?php if( $current_tab != 'popular-users' ): ?>style="display: none;" <?php endif; ?>>
+    <div class="user-list content-tabs__tab-content">
+        <?php
+        //$paged = isset( $_GET[ 'pg' ] ) ? max( 1, $_GET[ 'pg' ] ) : 1;
+        $page = isset( $_GET[ 'pg' ] ) && isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'popular-users' ? $_GET[ 'pg' ] : 1;
+        $users = get_users( [
+            'number' => $page * 10,
+            'orderby' => 'meta_value_num',
+            'order' => 'DESC',
+            'meta_query' => [
+                'relation' => 'OR',
+                [
+                    'key' => '_trianulla_like_count',
+                    'compare' => 'NOT EXISTS',
+                ],
+                [
+                    'key' => '_trianulla_like_count',
+                    'compare' => 'EXISTS',
+                ],
+            ],
+        ] );
+        if( count( $users ) > 0 ) {
+            foreach( $users as $user ) {
+                get_template_part( '/template-parts/user-card', null, [ 'user' => $user ] );
+            }
+        }
+        ?>
+    </div>
+    <button class="load-more">
+        <?php esc_html_e('Ещё'); ?>
+    </button>
 </div>

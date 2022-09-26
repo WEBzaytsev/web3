@@ -266,10 +266,6 @@ a.cs-header__button {
     align-items: center;
 }
 
-.community-page__post_likes {
-    cursor: pointer;
-}
-
 .community-page__post_author-url {
     display: flex;
     flex-shrink: 0;
@@ -286,6 +282,8 @@ a.cs-header__button {
 
 .community-page__post_comments-count,
 .community-page__post_likes-count {
+    position: relative;
+    top: 1px;
     margin-left: 4px;
     color: #BDBDBD;
 }
