@@ -40,5 +40,7 @@ if ( !isset( $email_heading ) ) {
 									<td width="50" style="width: 50px;"> </td>
 									<td width="500">
 										<!-- Text content -->
+                                        <?php if ( !empty( $email_heading ) ) { ?>
 										<p style="margin: 0; padding: 0; font-size: 40px; font-weight: bold; line-height: 40px; font-family: 'Inter', Helvetica, sans-serif;"><?= $email_heading ?></p>
+                                        <?php } ?>
 										
