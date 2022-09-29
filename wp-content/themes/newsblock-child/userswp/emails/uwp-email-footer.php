@@ -45,19 +45,19 @@ if ( !isset( $email_vars ) ) {
                                                     <table border="0" cellpadding="0" cellspacing="0" width="138">
                                                         <tr>
                                                             <td width="30">
-                                                                <a href="#"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tw.png" alt="Twitter" width="30" height="30" style="display: block;" /></a>
+                                                                <a href="https://twitter.com/trianulla"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tw.png" alt="Twitter" width="30" height="30" style="display: block;" /></a>
                                                             </td>
                                                             <td width="6">&nbsp;</td>
                                                             <td width="30">
-                                                                <a href="#"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tg.png" alt="Telegram" width="30" height="30" style="display: block;" /></a>
+                                                                <a href="https://t.me/trianulla"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tg.png" alt="Telegram" width="30" height="30" style="display: block;" /></a>
                                                             </td>
                                                             <td width="6">&nbsp;</td>
                                                             <td width="30">
-                                                                <a href="#"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/vk.png" alt="VK" width="30" height="30" style="display: block;" /></a>
+                                                                <a href="https://vk.com/"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/vk.png" alt="VK" width="30" height="30" style="display: block;" /></a>
                                                             </td>
                                                             <td width="6">&nbsp;</td>
                                                             <td width="30">
-                                                                <a href="#"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/in.png" alt="Linkedin" width="30" height="30" style="display: block;" /></a>
+                                                                <a href="https://www.linkedin.com/in/"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/in.png" alt="Linkedin" width="30" height="30" style="display: block;" /></a>
                                                             </td>
                                                         </tr>
                                                     </table>
