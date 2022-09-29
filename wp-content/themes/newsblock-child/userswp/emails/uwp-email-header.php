@@ -38,7 +38,7 @@ if ( !isset( $email_heading ) ) {
 								</tr>
 								<tr>
 									<td width="50" style="width: 50px;"> </td>
-									<td width="500">
+									<td width="500" style="font-size:16px;font-weight:normal;line-height:24px;font-family:'Inter',Helvetica,sans-serif">
 										<!-- Text content -->
                                         <?php if ( !empty( $email_heading ) ) { ?>
 										<p style="margin: 0; padding: 0; font-size: 40px; font-weight: bold; line-height: 40px; font-family: 'Inter', Helvetica, sans-serif;"><?= $email_heading ?></p>
