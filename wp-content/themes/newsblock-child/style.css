@@ -456,6 +456,9 @@ body .pld-common-wrap {
     gap: 20px;
     margin-bottom: 14px;
 }
+.profile-title:last-child {
+    margin: 0;
+}
 .profile-title__heading {
     font-size: 40px;
     margin: 0;

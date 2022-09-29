@@ -48,9 +48,11 @@ $in_account_settings = ( substr( get_page_link(), -9 ) == '/account/' ) ? true :
 				<a class="profile-actions__logout-link" href="<?= wp_logout_url( apply_filters( 'uwp_logout_url', $redirect, $custom_redirect ) ) ?>">Выйти</a>
 			</div>
 		<?php else: ?>
-			<div class="profile-likes">
-				<?= do_shortcode('[trianulla_like type="user" id="' . $user->ID . '"]') ?>
-			</div>
+			<?php if( ! is_user_logged_in() || get_current_user_id() != $user->ID ): ?>
+				<div class="profile-likes">
+					<?= do_shortcode('[trianulla_like type="user" id="' . $user->ID . '"]') ?>
+				</div>
+			<?php endif; ?>
 		<?php endif; ?>
 	</div>
 </div>
