@@ -1693,3 +1693,11 @@ input:checked + .slider:before {
 .cs-header__widgets-content .pk-social-links-linkedin .pk-social-links-link i {
     font-size: 0;
 }
+
+.cs-meta-community_post a,
+.cs-meta-community_post a:visited {
+    color: #808EF5;
+}
+.cs-meta-community_post a:hover {
+    text-decoration: underline;
+}

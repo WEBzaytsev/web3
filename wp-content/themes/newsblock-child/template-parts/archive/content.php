@@ -67,7 +67,7 @@ $options = get_query_var( 'options' );
 				</div>
 			<?php } ?>
 
-			<?php csco_get_post_meta( array( 'author', 'date', 'views', 'shares', 'comments' ), false, true, $options['meta'] ); ?>
+			<?php csco_get_post_meta( array( 'author', 'date', 'views', 'shares', 'comments', 'community_post' ), false, true, $options['meta'] ); ?>
 		</div>
 	</div>
 </article>
