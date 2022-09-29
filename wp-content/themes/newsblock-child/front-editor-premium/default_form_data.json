@@ -1,0 +1,15 @@
+{
+    "fe_post_updated_from_admin": "0",
+    "formBuilderData": "[\n  {\n    \"type\": \"post_title\",\n    \"required\": false,\n    \"label\": \"Post Title\"\n  },\n  {\n    \"type\": \"featured_image\",\n    \"required\": false,\n    \"label\": \"Featured Image\",\n    \"wp_media_uploader\": false\n  },\n  {\n    \"type\": \"post_content_editor_js\",\n    \"required\": false,\n    \"label\": \"EditorJS\",\n    \"name\": \"post_content_editor_js-1628616675898\",\n    \"post_content\": true,\n    \"editor_image_plugin\": true,\n    \"editor_header_plugin\": true,\n    \"editor_embed_plugin\": true,\n    \"editor_list_plugin\": true,\n    \"editor_checklist_plugin\": true,\n    \"editor_quote_plugin\": true,\n    \"editor_marker_plugin\": true,\n    \"editor_code_plugin\": true,\n    \"editor_delimiter_plugin\": true,\n    \"editor_inlineCode_plugin\": true,\n    \"editor_linkTool_plugin\": true,\n    \"editor_warning_plugin\": false,\n    \"editor_gallery_plugin\": false,\n    \"editor_table_plugin\": false\n  }\n]",
+    "fe_form_settings": {
+        "fe_post_type": "post",
+        "fe_post_status": "publish",
+        "fe_add_new_button": "display",
+        "comment_status": "open",
+        "submit_text": "Submit",
+        "post_added_message": "\u041d\u043e\u0432\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0441\u043e\u0437\u0434\u0430\u043d\u0430",
+        "update_message": "Post updated successfully",
+        "post_update_button_text": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c",
+        "guest_post": "false"
+    }
+}

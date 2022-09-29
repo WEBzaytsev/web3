@@ -24,7 +24,7 @@
 				<?php do_action( 'csco_site_content_after' ); ?>
 
 			</main>
-
+			<?= do_shortcode('[trianulla_subscribe template="wide"]') ?>
 		<?php do_action( 'csco_footer_before' ); ?>
 
 		<?php get_template_part( 'template-parts/footer' ); ?>

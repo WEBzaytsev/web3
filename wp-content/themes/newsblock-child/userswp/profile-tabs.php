@@ -115,7 +115,7 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 			<?php if( $comments_count < 1 ): ?>
 				<?php if( is_user_logged_in() && ( get_current_user_id() == $user->data->ID ) ): ?>
 					<div class="profile-no-posts">
-						<div class="profile-no-posts__title">Вы пока не написали ни одного комментария/div>
+						<div class="profile-no-posts__title">Вы пока не написали ни одного комментария</div>
 					</div>
 				<?php else: ?>
 					<div class="profile-no-posts">

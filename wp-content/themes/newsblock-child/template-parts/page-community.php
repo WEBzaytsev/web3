@@ -98,10 +98,18 @@ get_header(); ?>
                 'post_status' => 'publish',
                 'posts_per_page' => $popular_posts_per_page,
                 'author__not_in' => get_authors_ids(),
-                'meta_key' => 'post_views_count',
                 'orderby' => 'meta_value_num',
-                'meta_type' => 'NUMERIC',
-                'order' => 'DESC'
+                'meta_query' => [
+                    'relation' => 'OR',
+                    [
+                        'key' => '_trianulla_like_count',
+                        'compare' => 'NOT EXISTS',
+                    ],
+                    [
+                        'key' => '_trianulla_like_count',
+                        'compare' => 'EXISTS',
+                    ],
+                ],
             );
 
             $posts = query_posts($posts_args);
