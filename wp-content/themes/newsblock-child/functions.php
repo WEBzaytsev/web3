@@ -446,8 +446,8 @@ function modify_uwp_email_content( $message, $user_id ) {
     $message = str_replace( '<p>', '<p style="margin: 0; padding: 0; font-size: 16px; font-weight: normal; line-height: 24px; font-family:\'Inter\', Helvetica, sans-serif;">', $message );
     return $message;
 }
-add_filter( 'uwp_account_delete_mail_message', 'modify_uwp_email_content' );
-add_filter( 'uwp_activation_mail_message', 'modify_uwp_email_content' );
-add_filter( 'uwp_register_mail_message', 'modify_uwp_email_content' );
-add_filter( 'uwp_forgot_mail_message', 'modify_uwp_email_content' );
+add_filter( 'uwp_account_delete_mail_message', 'modify_uwp_email_content', 10, 2 );
+add_filter( 'uwp_activation_mail_message', 'modify_uwp_email_content', 10, 2 );
+add_filter( 'uwp_register_mail_message', 'modify_uwp_email_content', 10, 2 );
+add_filter( 'uwp_forgot_mail_message', 'modify_uwp_email_content', 10, 2 );
 /* */
