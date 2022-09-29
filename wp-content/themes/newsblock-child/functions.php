@@ -414,7 +414,7 @@ add_filter( 'the_content', 'insert_ads_to_posts' );
 
 /* Add post meta "Community post" to archive post template */
 function add_community_post_to_meta_choices( $choices ) {
-    $choices['community_post'] = esc_html__( 'Is Community Post', 'newsblock' );
+    $choices['community_post'] = esc_html__( 'Community Post Link', 'newsblock' );
     return $choices;
 }
 add_filter( 'csco_post_meta_choices', 'add_community_post_to_meta_choices' );
