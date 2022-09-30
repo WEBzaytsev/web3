@@ -1428,10 +1428,12 @@ input:checked + .slider:before {
     border: 1px solid #000;
     border-radius: 0;
 }
-.fus-view-page {
+.fus-view-page,
+.new-post-form__new-post-button {
     padding: 0;
 }
-.fus-view-page a {
+.fus-view-page a,
+.new-post-form__new-post-button a {
     width: 100%;
     color: #fff;
 }

@@ -80,7 +80,9 @@ echo $form_css;
                 endif;
                 $add_new_button = $form_settings['fe_add_new_button'] ?? false;
                 if (($post_id !== 'new' && $add_new_button !== 'disable') || $add_new_button === 'always_display') : ?>
-                    <a target="_blank" class="editor-button" href="<?= $new_post_link ?>" title="<?= __('Add new', FE_TEXT_DOMAIN) ?>"><?= __('Add new', FE_TEXT_DOMAIN) ?></a>
+                    <button type="button" class="new-post-form__new-post-button">
+                        <a target="_blank" class="editor-button" href="<?= $new_post_link ?>" title="<?= __('Add new', FE_TEXT_DOMAIN) ?>"><?= __('Add new', FE_TEXT_DOMAIN) ?></a>
+                    </button>
                 <?php endif; ?>
                 <button type="button" class="fus-view-page view-page <?php echo $post_id === 'new' ? 'hidden' : ''; ?>">
                     <a target="_blank" class="editor-button view-page" href="<?php the_permalink($post_id) ?? ''; ?>" title="<?php echo __('View Post', FE_TEXT_DOMAIN) ?>">
