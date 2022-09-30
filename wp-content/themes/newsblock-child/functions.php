@@ -243,7 +243,14 @@ function modify_uwp_input_text( $html, $field, $value, $form_type ) {
     if( $field->is_required ) {
         $required = 'required="required"';
     }
-    $html = '<div class="user-form__field"><input type="text" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /></div>';
+    $html = '<div class="user-form__field">';
+    $html .= '<input type="text" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' />';
+    if ( 'register' === $form_type && 'username' === $field->htmlvar_name ) {
+        $username_length = uwp_get_option( 'register_username_length');
+        $username_length = ! empty( $username_length ) ? (int) $username_length : 4;
+        $html .= '<div class="user-form__field-note">Минимальная длина: ' . plural_form( $username_length, ['символ', 'символа', 'символов'] ) . '</div>';
+    }
+    $html .= '</div>';
     return $html;
 }
 add_filter( 'uwp_form_input_html_text', 'modify_uwp_input_text', 10, 4 );
@@ -263,8 +270,18 @@ function modify_uwp_input_password( $html, $field, $value, $form_type ) {
     if( $field->is_required ) {
         $required = 'required="required"';
     }
-    $html = '<div class="user-form__field"><div class="user-form__field_password"><input type="password" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /><span></span></div></div>';
-    if( $form_type == 'register' && array_key_exists( 'extra_fields', $field ) ) {
+    $html = '<div class="user-form__field">';
+    $html .= '<div class="user-form__field_password"><input type="password" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /><span></span></div>';
+    if ( 'register' === $form_type && 'password' === $field->htmlvar_name || 'change' === $form_type && 'password' === $field->htmlvar_name ) {
+        $password_min_length = uwp_get_option( 'register_password_min_length');
+        $password_min_length = ! empty( $password_min_length ) ? (int)$password_min_length : 8;
+        $password_max_length = uwp_get_option( 'register_password_max_length');
+        $password_max_length = ! empty( $password_max_length ) ? (int) $password_max_length : 15;
+        $html .= '<div class="user-form__field-note">Минимальная длина: ' . plural_form( $password_min_length, ['символ', 'символа', 'символов'] ) . '<br />';
+        $html .= 'Максимальная длина: ' . plural_form( $password_max_length, ['символ', 'символа', 'символов'] ) . '</div>';
+    }
+    $html .= '</div>';
+    if ( $form_type == 'register' && array_key_exists( 'extra_fields', $field ) ) {
         $extra_fields = unserialize( $field->extra_fields );
         $html .= '<div class="user-form__field"><div class="user-form__field_password"><input type="password" name="' . array_key_first( $extra_fields ) . '" value="' . $value . '" placeholder="Повторите ' . strtolower( $field->site_title ) . '" ' . $required . ' /><span></span></div></div>';
     }
