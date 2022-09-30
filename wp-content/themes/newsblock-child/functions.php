@@ -574,7 +574,7 @@ function send_post_moderation_email( $post_id, $post, $update ) {
             ob_start();
             get_template_part( '/template-parts/email-template', null, [ 'content' => $content ] );
             $html = ob_get_clean();
-            wp_mail( $post_author->user_email, 'Статья отправлена на модерацию', $html );
+            wp_mail( $post_author->user_email, 'Статья отправлена на модерацию', $html, array('Content-Type: text/html; charset=UTF-8') );
         }
     }
 }
@@ -587,7 +587,7 @@ function send_post_publish_email( $post ) {
         ob_start();
         get_template_part( '/template-parts/email-template', null, [ 'content' => $content ] );
         $html = ob_get_clean();
-        wp_mail( $post_author->user_email, 'Статья успешно опубликована', $html );
+        wp_mail( $post_author->user_email, 'Статья успешно опубликована', $html, array('Content-Type: text/html; charset=UTF-8') );
     }
 }
 add_action( 'pending_to_publish', 'send_post_publish_email', 10, 1 );
