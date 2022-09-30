@@ -19,6 +19,22 @@ $avatar_url = get_avatar_url( $user->data->ID );
 
 $posts_count = count_user_posts( $user->ID, 'post', true );
 $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
+if ( is_user_logged_in() && ( get_current_user_id() == $user->data->ID ) ) {
+	$page = isset( $_GET[ 'pg' ] ) && isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'posts' ? $_GET[ 'pg' ] : 1;
+	$posts_per_page = $page * 10;
+	$query_args = [
+		'post_type' => 'post',
+		'posts_per_page' => $posts_per_page,
+	];
+	if ( ! current_user_can( 'edit_pages' ) ) {
+		$query_args['post_status'] = ['draft', 'pending'];
+		$query_args['author'] = $user->ID;
+	} else {
+		$query_args['post_status'] = 'pending';
+	}
+	$user_posts_query = new WP_Query( $query_args );
+	$user_posts_count = $user_posts_query->found_posts;
+}
 
 ?>
 <div class="profile__content content-tabs-frame">
@@ -43,6 +59,15 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 					<?= plural_form( $comments_count, ['комментарий', 'комментария', 'комментариев'] ) ?>
 				</a>
 			</li>
+			<?php if( is_user_logged_in() && ( get_current_user_id() == $user->data->ID ) ) : ?>
+				<li class="content-tabs__tab content-tabs__tab_with-padding content-tabs__tab_with-icon content-tabs__tab_with-icon_posts<?= ( $current_tab == 'user_posts' ) ? ' content-tabs__tab_active' : ''; ?>"
+					role="presentation">
+					<a href="#user_posts"
+						class="content-tabs__tab-url" data-paginated>
+						<?= plural_form( $user_posts_count, ['неопубликованная статья', 'неопубликованных статьи', 'неопубликованных статей'] ) ?>
+					</a>
+				</li>
+			<?php endif; ?>
 		</ul>
 		<div id="posts" <?php if( $current_tab != 'posts' ): ?>style="display: none;" <?php endif; ?>>
 			<?php
@@ -136,6 +161,41 @@ $comments_count = get_comments( [ 'user_id' => $user->ID, 'count' => true ] );
 				<?php esc_html_e('Ещё'); ?>
 			</button>
 		</div>
+		<?php if( is_user_logged_in() && ( get_current_user_id() == $user->data->ID ) ) : ?>
+			<div id="user_posts" <?php if( $current_tab != 'user_posts' ): ?>style="display: none;" <?php endif; ?>>
+				<div class="list-post list-post_head">
+					<div class="list-post__title">
+						Название поста
+					</div>
+					<div class="list-post__status-container">
+						Статус
+					</div>
+					<div class="list-post__modified">
+						Последнее изменение
+					</div>
+					<div class="list-post__actions">
+						Действие
+					</div>
+				</div>
+				<div class="content-tabs__tab-content">
+					<?php
+					if ( $user_posts_query && $user_posts_query->have_posts() ) {
+
+						while ( $user_posts_query->have_posts())  {
+							$user_posts_query->the_post();
+							get_template_part('/template-parts/list-post-template');
+						}
+					
+						/* Restore original Post Data */
+						wp_reset_postdata();
+					}
+					?>
+				</div>
+				<button class="load-more">
+					<?php esc_html_e('Ещё'); ?>
+				</button>
+			</div>
+		<?php endif; ?>
 		<?php
 	}
 	do_action( 'uwp_template_after', 'profile-tabs' );

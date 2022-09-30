@@ -72,7 +72,9 @@ function csco_child_theme_scripts() {
 
     $options = [
         'ajax_url' => admin_url('admin-ajax.php'),
-        'get_community_posts' => wp_create_nonce('get_community_posts')
+        'get_community_posts' => wp_create_nonce('get_community_posts'),
+        'publish_community_post' => wp_create_nonce('publish_community_post'),
+        'remove_community_post' => wp_create_nonce('remove_community_post'),
     ];
 
     if (is_page('community')) {
@@ -113,6 +115,22 @@ function csco_child_theme_scripts() {
                     'comments' => $comments_count,
                     'author_id' => $user_id
                 ] );
+                if ( is_user_logged_in() && ( get_current_user_id() == $user->data->ID ) ) {
+                    $query_args = [
+                        'post_type' => 'post',
+                    ];
+                    if ( ! current_user_can( 'edit_pages' ) ) {
+                        $query_args['post_status'] = ['draft', 'pending'];
+                        $query_args['author'] = $user->ID;
+                    } else {
+                        $query_args['post_status'] = 'pending';
+                    }
+                    $user_posts_query = new WP_Query( $query_args );
+                    $user_posts_count = $user_posts_query->found_posts;
+                    $options = array_merge( $options, [
+                        'user_posts' => $user_posts_count,
+                    ] );
+                }
             }
         }
     }
@@ -167,45 +185,70 @@ function get_community_posts() {
             endforeach;
         }
     } else {
-        $args = array(
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'posts_per_page' => 5,
-            'paged' => (int)$page,
-        );
-        if( isset( $author_id ) ) {
-            $args[ 'author' ] = $author_id;
-        } else {
-            $args[ 'author__not_in' ] = get_authors_ids();
-        }
-    
-        $popular_posts_args = array(
-            'orderby' => 'meta_value_num',
-            'meta_query' => [
-                'relation' => 'OR',
-                [
-                    'key' => '_trianulla_like_count',
-                    'compare' => 'NOT EXISTS',
-                ],
-                [
-                    'key' => '_trianulla_like_count',
-                    'compare' => 'EXISTS',
-                ],
-            ],
-        );
-    
-        if ($tab == 'popular-posts') {
-            $args = $args + $popular_posts_args;
-        }
-    
-        $posts = query_posts($args);
-    
-        if (have_posts()) {
-            while (have_posts()) {
-                the_post();
-                get_template_part('/template-parts/post-template');
+        if ( $tab == 'user_posts' ) {
+            if ( is_user_logged_in() && ( get_current_user_id() == $author_id ) || current_user_can( 'edit_pages' ) ) {
+                $query_args = [
+                    'post_type' => 'post',
+                    'posts_per_page' => 10,
+                    'paged' => (int) $page,
+                ];
+                if ( ! current_user_can( 'edit_pages' ) ) {
+                    $query_args['post_status'] = ['draft', 'pending'];
+                    $query_args['author'] = get_current_user_id();
+                } else {
+                    $query_args['post_status'] = 'pending';
+                }
+                $posts = query_posts($query_args);
+        
+                if (have_posts()) {
+                    while (have_posts()) {
+                        the_post();
+                        get_template_part('/template-parts/list-post-template');
+                    }
+                    wp_reset_postdata();
+                }
             }
-            wp_reset_postdata();
+        } else {
+            $args = array(
+                'post_type' => 'post',
+                'post_status' => 'publish',
+                'posts_per_page' => 5,
+                'paged' => (int) $page,
+            );
+            if ( isset( $author_id ) ) {
+                $args[ 'author' ] = $author_id;
+            } else {
+                $args[ 'author__not_in' ] = get_authors_ids();
+            }
+        
+            $popular_posts_args = array(
+                'orderby' => 'meta_value_num',
+                'meta_query' => [
+                    'relation' => 'OR',
+                    [
+                        'key' => '_trianulla_like_count',
+                        'compare' => 'NOT EXISTS',
+                    ],
+                    [
+                        'key' => '_trianulla_like_count',
+                        'compare' => 'EXISTS',
+                    ],
+                ],
+            );
+        
+            if ($tab == 'popular-posts') {
+                $args = $args + $popular_posts_args;
+            }
+        
+            $posts = query_posts($args);
+        
+            if (have_posts()) {
+                while (have_posts()) {
+                    the_post();
+                    get_template_part('/template-parts/post-template');
+                }
+                wp_reset_postdata();
+            }
         }
     }
 
@@ -457,3 +500,94 @@ function csco_get_meta_community_post( $tag = 'div', $compact = false, $settings
     return $output;
 }
 /* */
+
+function publish_community_post() {
+    check_ajax_referer('publish_community_post', 'nonce');
+    $id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+    if ( ! is_user_logged_in() || ! current_user_can( 'edit_pages' ) ) {
+        wp_send_json(
+            array(
+                'success' => false,
+                'error'   => 'User cant manage posts',
+            )
+        );
+    }
+    $post = get_post( $id );
+    if ( ! $post ) {
+        wp_send_json(
+            array(
+                'success' => false,
+                'error'   => 'Post not found',
+            )
+        );
+    }
+    $post->post_status = 'publish';
+    wp_update_post( $post );
+    wp_send_json(
+        array(
+            'success' => true,
+            'url'   => get_permalink( $post->ID ),
+        )
+    );
+}
+
+add_action( 'wp_ajax_publish_community_post', 'publish_community_post' );
+
+
+function remove_community_post() {
+    check_ajax_referer('remove_community_post', 'nonce');
+    $id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+    $post = get_post( $id );
+    if ( ! $post ) {
+        wp_send_json(
+            array(
+                'success' => false,
+                'error'   => 'Post not found',
+            )
+        );
+    }
+    if ( is_user_logged_in() && current_user_can( 'edit_pages' ) || is_user_logged_in() && get_current_user_id() == $post->post_author ) {
+        $post->post_status = 'trash';
+        wp_update_post( $post );
+        wp_send_json(
+            array(
+                'success' => true,
+            )
+        );
+    } else {
+        wp_send_json(
+            array(
+                'success' => false,
+                'error'   => 'User cant manage the post',
+            )
+        );
+    }
+}
+
+add_action( 'wp_ajax_remove_community_post', 'remove_community_post' );
+
+function send_post_moderation_email( $post_id, $post, $update ) {
+    if ( ! $update && 'pending' === $post->post_status ) {
+        $post_author = get_userdata( $post->post_author );
+        if ( $post_author->user_email && is_email( $post_author->user_email ) ) {
+            $content = '<p>Ваша статья &laquo;' . esc_html( $post->post_title ) . '&raquo; была успешно добавлена и отправлена на модерацию. Вы получите уведомление, когда ваша статья будет одобрена.</p>';
+            ob_start();
+            get_template_part( '/template-parts/email-template', null, [ 'content' => $content ] );
+            $html = ob_get_clean();
+            wp_mail( $post_author->user_email, 'Статья отправлена на модерацию', $html );
+        }
+    }
+}
+add_action( 'wp_insert_post', 'send_post_moderation_email', 10, 3 );
+
+function send_post_publish_email( $post ) {
+    $post_author = get_userdata( $post->post_author );
+    if ( $post_author->user_email && is_email( $post_author->user_email ) ) {
+        $content = '<p>Ваша статья &laquo;<a href="' . esc_html( get_permalink( $post->ID ) ) . '">' . esc_html( $post->post_title ) . '</a>&raquo; успешно прошла модерацию и была опубликована.</p>';
+        ob_start();
+        get_template_part( '/template-parts/email-template', null, [ 'content' => $content ] );
+        $html = ob_get_clean();
+        wp_mail( $post_author->user_email, 'Статья успешно опубликована', $html );
+    }
+}
+add_action( 'pending_to_publish', 'send_post_publish_email', 10, 1 );
