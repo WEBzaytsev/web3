@@ -1607,13 +1607,39 @@ input:checked + .slider:before {
 .cs-header__widgets {
     margin-top: 1px;
     box-shadow: 0 10px 50px rgb(0 0 0 / 25%);
+    height: 417px;
 }
 .cs-header__widgets-content {
+    padding: 35px 50px 0 50px;
     border: none;
 }
-.cs-header__widgets-content .widget_text:not(.widget_custom_html),
-.cs-offcanvas__inner .widget_text:not(.widget_custom_html) {
-    margin: 0 !important;
+.cs-header__widgets-content .cnvs-block-section-heading {
+    padding: 0;
+    border: none;
+    text-align: center;
+}
+.cs-header__widgets-content .cnvs-block-section-heading .cnvs-section-title {
+    font-size: 20px;
+    line-height: 26px;
+}
+.cs-header__widgets-img {
+    width: 380px;
+    flex: 0 1 380px;
+}
+.cs-header__widgets-content .widget_text {
+    margin-top: -2px;
+    margin-bottom: 46px;
+}
+.cs-header__widgets-content .widget_text .cnvs-block-section-heading {
+    margin-bottom: 30px;
+}
+.cs-header__widgets-content .trianulla-subscribe__form-result {
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 14px;
 }
 
 .cs-header__widgets-content .pk-social-links-items {
