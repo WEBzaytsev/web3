@@ -243,7 +243,14 @@ function modify_uwp_input_text( $html, $field, $value, $form_type ) {
     if( $field->is_required ) {
         $required = 'required="required"';
     }
-    $html = '<div class="user-form__field"><input type="text" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /></div>';
+    $html = '<div class="user-form__field">';
+    $html .= '<input type="text" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' />';
+    if ( 'register' === $form_type && 'username' === $field->htmlvar_name ) {
+        $username_length = uwp_get_option( 'register_username_length');
+        $username_length = ! empty( $username_length ) ? (int) $username_length : 4;
+        $html .= '<div class="user-form__field-note">Минимальная длина: ' . plural_form( $username_length, ['символ', 'символа', 'символов'] ) . '</div>';
+    }
+    $html .= '</div>';
     return $html;
 }
 add_filter( 'uwp_form_input_html_text', 'modify_uwp_input_text', 10, 4 );
@@ -263,8 +270,18 @@ function modify_uwp_input_password( $html, $field, $value, $form_type ) {
     if( $field->is_required ) {
         $required = 'required="required"';
     }
-    $html = '<div class="user-form__field"><div class="user-form__field_password"><input type="password" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /><span></span></div></div>';
-    if( $form_type == 'register' && array_key_exists( 'extra_fields', $field ) ) {
+    $html = '<div class="user-form__field">';
+    $html .= '<div class="user-form__field_password"><input type="password" name="' . $field->htmlvar_name . '" value="' . $value . '" placeholder="' . $field->site_title . '" ' . $required . ' /><span></span></div>';
+    if ( 'register' === $form_type && 'password' === $field->htmlvar_name || 'change' === $form_type && 'password' === $field->htmlvar_name ) {
+        $password_min_length = uwp_get_option( 'register_password_min_length');
+        $password_min_length = ! empty( $password_min_length ) ? (int)$password_min_length : 8;
+        $password_max_length = uwp_get_option( 'register_password_max_length');
+        $password_max_length = ! empty( $password_max_length ) ? (int) $password_max_length : 15;
+        $html .= '<div class="user-form__field-note">Минимальная длина: ' . plural_form( $password_min_length, ['символ', 'символа', 'символов'] ) . '<br />';
+        $html .= 'Максимальная длина: ' . plural_form( $password_max_length, ['символ', 'символа', 'символов'] ) . '</div>';
+    }
+    $html .= '</div>';
+    if ( $form_type == 'register' && array_key_exists( 'extra_fields', $field ) ) {
         $extra_fields = unserialize( $field->extra_fields );
         $html .= '<div class="user-form__field"><div class="user-form__field_password"><input type="password" name="' . array_key_first( $extra_fields ) . '" value="' . $value . '" placeholder="Повторите ' . strtolower( $field->site_title ) . '" ' . $required . ' /><span></span></div></div>';
     }
@@ -412,45 +429,31 @@ function insert_ads_to_posts( $content ) {
 }
 add_filter( 'the_content', 'insert_ads_to_posts' );
 
-/**
- * Header Single-Column Widgets. Parent theme override
- *
- * @param array $settings The advanced settings.
- */
-function csco_header_single_column_widgets( $settings = array() ) {
-
-    if ( ! get_theme_mod( 'header_single_column_display', true ) ) {
-        return;
-    }
-
-    if ( ! is_active_sidebar( 'sidebar-singlecolumn' ) ) {
-        return;
-    }
-
-    // Background Image.
-    $bg_image_id = get_theme_mod( 'header_single_column_image' );
-
-    $scheme = csco_color_scheme(
-        get_theme_mod( 'color_submenu_background', '#FFFFFF' ),
-        get_theme_mod( 'color_submenu_background_dark', '#1c1c1c' )
-    );
-    ?>
-    <div <?php csco_site_submenu_class( array( 'cs-header__single-column' ) ); ?>>
-        <span class="cs-header__single-column-label"><?php echo esc_html( get_theme_mod( 'header_single_column_title', esc_html__( 'Follow', 'newsblock' ) ) ); ?></span>
-        <div class="cs-header__widgets" <?php echo wp_kses( $scheme, 'post' ); ?>>
-            <?php if ( $bg_image_id ) { ?>
-                <figure class="cs-header__widgets-img">
-                    <?php
-                        echo wp_get_attachment_image( $bg_image_id, 'large', array(
-                            'class' => 'pk-lazyload-disabled',
-                        ) );
-                    ?>
-                </figure>
-            <?php } ?>
-            <div class="cs-header__widgets-content cs-header__widgets-column cs-widget-area">
-                <?php dynamic_sidebar( 'sidebar-singlecolumn' ); ?>
-            </div>
-        </div>
-    </div>
-    <?php
+/* Add post meta "Community post" to archive post template */
+function add_community_post_to_meta_choices( $choices ) {
+    $choices['community_post'] = esc_html__( 'Community Post Link', 'newsblock' );
+    return $choices;
 }
+add_filter( 'csco_post_meta_choices', 'add_community_post_to_meta_choices' );
+
+function is_community_author( $user_id ) {
+    $user_meta = get_userdata( $user_id );
+    $roles = $user_meta->roles;
+    if ( in_array( 'subsriber', $roles, true ) || in_array( 'contributor', $roles, true ) ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function csco_get_meta_community_post( $tag = 'div', $compact = false, $settings = array() ) {
+    $output = '';
+    $author_id = array( get_the_author_meta( 'ID' ) )[ 0 ];
+    if( is_community_author( $author_id ) ) {
+        $output = '<' . esc_html( $tag ) . ' class="cs-meta-community_post">';
+        $output .= '<a href="/community">Из сообщества</a>';
+        $output .= '</' . esc_html( $tag ) . '>';
+    }
+    return $output;
+}
+/* */
