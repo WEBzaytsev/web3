@@ -226,11 +226,11 @@ function get_community_posts() {
                 'meta_query' => [
                     'relation' => 'OR',
                     [
-                        'key' => '_trianulla_like_count',
+                        'key' => '_webtree_like_count',
                         'compare' => 'NOT EXISTS',
                     ],
                     [
-                        'key' => '_trianulla_like_count',
+                        'key' => '_webtree_like_count',
                         'compare' => 'EXISTS',
                     ],
                 ],

@@ -50,7 +50,7 @@ $in_account_settings = ( substr( get_page_link(), -9 ) == '/account/' ) ? true :
 		<?php else: ?>
 			<?php if( ! is_user_logged_in() || get_current_user_id() != $user->ID ): ?>
 				<div class="profile-likes">
-					<?= do_shortcode('[trianulla_like type="user" id="' . $user->ID . '"]') ?>
+					<?= do_shortcode('[webtree_like type="user" id="' . $user->ID . '"]') ?>
 				</div>
 			<?php endif; ?>
 		<?php endif; ?>

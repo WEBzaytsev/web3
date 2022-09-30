@@ -1641,7 +1641,7 @@ input:checked + .slider:before {
 .cs-header__widgets-content .widget_text .cnvs-block-section-heading {
     margin-bottom: 30px;
 }
-.cs-header__widgets-content .trianulla-subscribe__form-result {
+.cs-header__widgets-content .webtree-subscribe__form-result {
     position: absolute;
     bottom: -30px;
     left: 0;
