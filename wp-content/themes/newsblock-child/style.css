@@ -1736,6 +1736,10 @@ input:checked + .slider:before {
     text-decoration: underline;
 }
 
+.cs-offcanvas__inner .widget_text:not(.widget_custom_html) {
+    margin-bottom: 0;
+}
+
 .list-post {
     display: flex;
     gap: 20px;
