@@ -252,6 +252,59 @@
         e.target.value = +e.target.checked;
     }
 
+    document.body.addEventListener( 'click', function ( event ) {
+        if( event.target.classList.contains( 'list-post__action_publish' ) ) {
+            publish_community_post( event.target );
+        }
+        if( event.target.classList.contains( 'list-post__action_remove' ) ) {
+            remove_community_post( event.target );
+        }
+    } );
+
+    async function publish_community_post( target ) {
+        const id = target.dataset.hasOwnProperty( 'id' ) ? target.dataset.id : 0;
+        const url = options.ajax_url;
+        const sendOptions = {
+            method: 'POST',
+            body: new FormData(),
+        };
+        sendOptions.body.set( 'action', 'publish_community_post' );
+        sendOptions.body.set( 'id', id );
+        sendOptions.body.set( 'nonce', options.publish_community_post );
+        try {
+            const response = await fetch( url, sendOptions );
+            const data = await response.json();
+            if( data.success ) {
+                const post_block = target.closest( '.list-post' );
+                post_block.innerHTML = '<div class="list-post__result">Пост опубликован. <a href="' + data.url + '">Посмотреть</a></div>';
+            }
+        } catch (e) {
+            return false;
+        }
+    }
+
+    async function remove_community_post( target ) {
+        const id = target.dataset.hasOwnProperty( 'id' ) ? target.dataset.id : 0;
+        const url = options.ajax_url;
+        const sendOptions = {
+            method: 'POST',
+            body: new FormData(),
+        };
+        sendOptions.body.set( 'action', 'remove_community_post' );
+        sendOptions.body.set( 'id', id );
+        sendOptions.body.set( 'nonce', options.remove_community_post );
+        try {
+            const response = await fetch( url, sendOptions );
+            const data = await response.json();
+            if( data.success ) {
+                const post_block = target.closest( '.list-post' );
+                post_block.innerHTML = '<div class="list-post__result">Пост успешно удален.';
+            }
+        } catch (e) {
+            return false;
+        }
+    }
+
     /*
         const tabsWrap = document.getElementById('tabs-tab');
         const tabs = [

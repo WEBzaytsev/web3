@@ -113,7 +113,7 @@ $scheme = csco_color_scheme(
 								csco_component( 'header_social_links' );
 								csco_component( 'header_button' );
 								if ( is_user_logged_in() ) {
-									$subscribed = get_user_meta( get_current_user_id(), '_trianulla_subscribe_subscribed', true );
+									$subscribed = get_user_meta( get_current_user_id(), '_webtree_subscribe_subscribed', true );
 									if ( ! $subscribed ) {
 										csco_component( 'header_single_column_widgets' );
 									}
