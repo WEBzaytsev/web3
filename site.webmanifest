@@ -1,6 +1,6 @@
-/wp-content/themes/newsblock-child/favicon{
-    "name": "",
-    "short_name": "",
+{
+    "name": "WebTree",
+    "short_name": "WebTree",
     "icons": [
         {
             "src": "/wp-content/themes/newsblock-child/favicon/android-chrome-36x36.png",
