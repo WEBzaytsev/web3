@@ -482,7 +482,7 @@ add_filter( 'csco_post_meta_choices', 'add_community_post_to_meta_choices' );
 function is_community_author( $user_id ) {
     $user_meta = get_userdata( $user_id );
     $roles = $user_meta->roles;
-    if ( in_array( 'subsriber', $roles, true ) || in_array( 'contributor', $roles, true ) ) {
+    if ( in_array( 'subsriber', $roles, true ) || in_array( 'contributor', $roles, true ) || in_array( 'author', $roles, true ) ) {
         return true;
     } else {
         return false;
