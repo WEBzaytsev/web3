@@ -83,7 +83,7 @@ function csco_child_theme_scripts() {
             'post_type' => 'post',
             'post_status' => 'publish',
             'posts_per_page' => -1,
-            'author__not_in' => get_authors_ids(),
+            'author__not_in' => get_excluded_community_authors_ids(),
         );
 
         $popular_posts_args = array(
@@ -218,7 +218,7 @@ function get_community_posts() {
             if ( isset( $author_id ) ) {
                 $args[ 'author' ] = $author_id;
             } else {
-                $args[ 'author__not_in' ] = get_authors_ids();
+                $args[ 'author__not_in' ] = get_excluded_community_authors_ids();
             }
         
             $popular_posts_args = array(
@@ -258,11 +258,11 @@ function get_community_posts() {
 add_action('wp_ajax_get_community_posts', 'get_community_posts');
 add_action('wp_ajax_nopriv_get_community_posts', 'get_community_posts');
 
-function get_authors_ids(): array
+function get_excluded_community_authors_ids(): array
 {
     $users_args = array(
-        'role'    => 'Administrator',
-        'order'   => 'ASC'
+        'role__in' => array( 'administrator', 'translator', 'social_subscriber', 'snax_author', 'editor' ),
+        'order'    => 'ASC'
     );
     $users = get_users( $users_args );
     $excluded_users = array();

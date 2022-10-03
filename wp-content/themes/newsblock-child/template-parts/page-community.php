@@ -76,7 +76,7 @@ get_header(); ?>
                 'post_type' => 'post',
                 'post_status' => 'publish',
                 'posts_per_page' => $last_posts_per_page,
-                'author__not_in' => get_authors_ids(),
+                'author__not_in' => get_excluded_community_authors_ids(),
             );
 
             $posts = query_posts($posts_args);
@@ -97,7 +97,7 @@ get_header(); ?>
                 'post_type' => 'post',
                 'post_status' => 'publish',
                 'posts_per_page' => $popular_posts_per_page,
-                'author__not_in' => get_authors_ids(),
+                'author__not_in' => get_excluded_community_authors_ids(),
                 'orderby' => 'meta_value_num',
                 'meta_query' => [
                     'relation' => 'OR',
