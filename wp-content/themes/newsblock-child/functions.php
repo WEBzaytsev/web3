@@ -599,3 +599,10 @@ function send_post_publish_email( $post ) {
     }
 }
 add_action( 'pending_to_publish', 'send_post_publish_email', 10, 1 );
+
+function add_admin_post_edit_scripts( $hook ) {
+    if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
+        wp_enqueue_script( 'custom_post_edit_scripts', get_stylesheet_directory_uri().'/js/admin_post_edit.js', array(), csco_get_theme_data( 'Version' ), true );
+    }
+}
+add_action( 'admin_enqueue_scripts', 'add_admin_post_edit_scripts', 10, 1 );
