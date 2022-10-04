@@ -136,9 +136,11 @@ function csco_child_theme_scripts() {
     }
 
     if( substr( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), 0, 7 ) == '/users/' ) {
+        $new_users = get_users( new_users_query_args() );
+        $popular_users = get_users( popular_users_query_args() );
         $options = array_merge( $options, [
-            'new-users' => count_users()[ 'total_users' ],
-            'popular-users' => count_users()[ 'total_users' ],
+            'new-users' => count( $new_users ),
+            'popular-users' => count( $popular_users ),
         ] );
     }
 
@@ -152,6 +154,86 @@ function csco_child_theme_scripts() {
 }
 
 add_action('wp_enqueue_scripts', 'csco_child_theme_scripts');
+
+function new_users_query_args() {
+    return [
+        'orderby' => 'registered',
+        'order' => 'DESC',
+        'meta_query' => [
+            'relation' => 'AND',
+            [
+                'relation' => 'OR',
+                [
+                    'key' => '_webtree_hide_from_list',
+                    'compare' => 'NOT EXISTS',
+                ],
+                [
+                    'key' => '_webtree_hide_from_list',
+                    'value' => 1,
+                    'compare' => '!=',
+                ],
+            ],
+            [
+                'relation' => 'OR',
+                [
+                    'key' => 'uwp_hide_from_listing',
+                    'compare' => 'NOT EXISTS',
+                ],
+                [
+                    'key' => 'uwp_hide_from_listing',
+                    'value' => 1,
+                    'compare' => '!=',
+                ],
+            ],
+        ],
+    ];
+}
+function popular_users_query_args() {
+    return [
+        'orderby' => [
+            'like_exists' => 'DESC',
+            'like_clause' => 'DESC',
+        ],
+        'meta_query' => [
+            'relation' => 'AND',
+            [
+                'relation' => 'OR',
+                [
+                    'key' => '_webtree_hide_from_list',
+                    'compare' => 'NOT EXISTS',
+                ],
+                [
+                    'key' => '_webtree_hide_from_list',
+                    'value' => 1,
+                    'compare' => '!=',
+                ],
+            ],
+            [
+                'relation' => 'OR',
+                [
+                    'key' => 'uwp_hide_from_listing',
+                    'compare' => 'NOT EXISTS',
+                ],
+                [
+                    'key' => 'uwp_hide_from_listing',
+                    'value' => 1,
+                    'compare' => '!=',
+                ],
+            ],
+            [
+                'relation' => 'OR',
+                'like_exists' => [
+                    'key' => '_webtree_like_count',
+                    'compare' => 'NOT EXISTS',
+                ],
+                'like_clause' => [
+                    'key' => '_webtree_like_count',
+                    'compare' => 'EXISTS',
+                ],
+            ],
+        ],
+    ];
+}
 
 function get_community_posts() {
     check_ajax_referer('get_community_posts', 'nonce');
@@ -173,12 +255,27 @@ function get_community_posts() {
             endforeach;
         }
     } elseif( $type == 'users' ) {
-        $users = get_users( [
-            'orderby' => 'registered',
-            'order' => 'DESC',
-            'number' => 10,
-            'offset' => ( $page - 1 ) * 10
-        ] );
+        if ( 'popular-users' === $tab ) {
+            $users = get_users(
+                array_merge(
+                    popular_users_query_args(),
+                    [
+                        'number' => 10,
+                        'offset' => ( $page - 1 ) * 10,
+                    ]
+                )
+            );
+        } else {
+            $users = get_users(
+                array_merge(
+                    new_users_query_args(),
+                    [
+                        'number' => 10,
+                        'offset' => ( $page - 1 ) * 10,
+                    ]
+                )
+            );
+        }
         if( $users ) {
             foreach( $users as $user ):
                 get_template_part( '/template-parts/user-card', null, [ 'user' => $user ] );
@@ -606,3 +703,21 @@ function add_admin_post_edit_scripts( $hook ) {
     }
 }
 add_action( 'admin_enqueue_scripts', 'add_admin_post_edit_scripts', 10, 1 );
+
+/* Admin user edit page: add hide from users list checkbox */
+function add_admin_user_list_meta( $user ) {
+    get_template_part( '/template-parts/admin/user-list-meta', null, array( 'user' => $user ) );
+}
+add_filter( 'show_user_profile', 'add_admin_user_list_meta', 10, 1 );
+add_filter( 'edit_user_profile', 'add_admin_user_list_meta', 10, 1 );
+
+function save_admin_user_list_meta( $user_id ) {
+    if ( isset ( $_POST['webtree_hide_from_list'] ) ) {
+        update_user_meta( $user_id, '_webtree_hide_from_list', '1' );
+    } else {
+        update_user_meta( $user_id, '_webtree_hide_from_list', '0' );
+    }
+}
+add_action( 'personal_options_update', 'save_admin_user_list_meta', 10, 1 );
+add_action( 'edit_user_profile_update', 'save_admin_user_list_meta', 10, 1 );
+/* */

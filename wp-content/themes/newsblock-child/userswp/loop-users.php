@@ -35,11 +35,14 @@ if ( isset( $_GET['tab'] ) ) {
         <?php
         //$paged = isset( $_GET[ 'pg' ] ) ? max( 1, $_GET[ 'pg' ] ) : 1;
         $page = isset( $_GET[ 'pg' ] ) && isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'new-users' ? $_GET[ 'pg' ] : 1;
-        $users = get_users( [
-            'orderby' => 'registered',
-            'order' => 'DESC',
-            'number' => $page * 10
-        ] );
+        $users = get_users(
+            array_merge(
+                new_users_query_args(),
+                [
+                    'number' => $page * 10,
+                ]
+            )
+        );
         if( count( $users ) > 0 ) {
             foreach( $users as $user ) {
                 get_template_part( '/template-parts/user-card', null, [ 'user' => $user ] );
@@ -56,22 +59,14 @@ if ( isset( $_GET['tab'] ) ) {
         <?php
         //$paged = isset( $_GET[ 'pg' ] ) ? max( 1, $_GET[ 'pg' ] ) : 1;
         $page = isset( $_GET[ 'pg' ] ) && isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] == 'popular-users' ? $_GET[ 'pg' ] : 1;
-        $users = get_users( [
-            'number' => $page * 10,
-            'orderby' => 'meta_value_num',
-            'order' => 'DESC',
-            'meta_query' => [
-                'relation' => 'OR',
+        $users = get_users(
+            array_merge(
+                popular_users_query_args(),
                 [
-                    'key' => '_webtree_like_count',
-                    'compare' => 'NOT EXISTS',
-                ],
-                [
-                    'key' => '_webtree_like_count',
-                    'compare' => 'EXISTS',
-                ],
-            ],
-        ] );
+                    'number' => $page * 10,
+                ]
+            )
+        );
         if( count( $users ) > 0 ) {
             foreach( $users as $user ) {
                 get_template_part( '/template-parts/user-card', null, [ 'user' => $user ] );
