@@ -1,8 +1,10 @@
-document.body.addEventListener( 'click', function(e) {
-    if( e.target.classList.contains( 'editor-post-publish-button' ) ) {
-        checkRankMathFields( e );
-    }
-}, true );
+if ( 'post' === pagenow ) {
+    document.body.addEventListener( 'click', function(e) {
+        if( e.target.classList.contains( 'editor-post-publish-button' ) ) {
+            checkRankMathFields( e );
+        }
+    }, true );
+}
 
 function checkRankMathFields( e ) {
     const repo = select( 'rank-math' );
