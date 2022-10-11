@@ -449,6 +449,9 @@ body .pld-common-wrap {
 .profile-header__edit-link:hover {
     opacity: 0.8;
 }
+.profile-bio {
+    margin-top: 20px;
+}
 .profile-title {
     display: flex;
     flex-direction: row;

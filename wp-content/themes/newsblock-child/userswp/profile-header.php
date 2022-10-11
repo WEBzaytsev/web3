@@ -54,6 +54,11 @@ $in_account_settings = ( substr( get_page_link(), -9 ) == '/account/' ) ? true :
 				</div>
 			<?php endif; ?>
 		<?php endif; ?>
+		<?php if ( ! empty(  trim( $user->description ) ) ): ?>
+			<div class="profile-bio">
+				<?= esc_html( $user->description ) ?>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>
 <?php do_action( 'uwp_template_after', 'profile-header' ); ?>
