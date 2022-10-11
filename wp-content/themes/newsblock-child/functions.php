@@ -157,6 +157,7 @@ add_action('wp_enqueue_scripts', 'csco_child_theme_scripts');
 
 function new_users_query_args() {
     return [
+        'role__in' => array( 'author', 'subscriber', 'contributor' ),
         'orderby' => 'registered',
         'order' => 'DESC',
         'meta_query' => [
@@ -190,6 +191,7 @@ function new_users_query_args() {
 }
 function popular_users_query_args() {
     return [
+        'role__in' => array( 'author', 'subscriber', 'contributor' ),
         'orderby' => [
             'like_exists' => 'DESC',
             'like_clause' => 'DESC',
