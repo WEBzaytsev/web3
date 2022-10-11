@@ -679,7 +679,6 @@ function send_post_moderation_email( $post_id, $post, $update ) {
                 'Content-Type: text/html; charset=UTF-8',
                 'From: ' . esc_attr( get_bloginfo( 'name' ) ) . ' <noreply@' . $domain_name . '>',
             );
-            var_dump($content); die;
             wp_mail( $post_author->user_email, 'Ваш материал на модерации на сайте ' . $domain_name, $html, $headers );
         }
     }
@@ -701,11 +700,30 @@ function send_post_publish_email( $post ) {
             'Content-Type: text/html; charset=UTF-8',
             'From: ' . esc_attr( get_bloginfo( 'name' ) ) . ' <noreply@' . $domain_name . '>',
         );
-        var_dump($content); die;
         wp_mail( $post_author->user_email, 'Ваш материал вышел на ' . $domain_name, $html, $headers );
     }
 }
 add_action( 'pending_to_publish', 'send_post_publish_email', 10, 1 );
+
+function send_denied_post_email( $post ) {
+    $post_author = get_userdata( $post->post_author );
+    $domain_name = parse_url( get_site_url(), PHP_URL_HOST );
+    if ( $post_author->user_email && is_email( $post_author->user_email ) ) {
+        $user_name = $post_author->first_name;
+        ob_start();
+        get_template_part( '/template-parts/email/denied-post', null, [ 'user_name' => $user_name, 'domain_name' => $domain_name ] );
+        $content = ob_get_clean();
+        ob_start();
+        get_template_part( '/template-parts/email/email-template', null, [ 'content' => $content ] );
+        $html = ob_get_clean();
+        $headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . esc_attr( get_bloginfo( 'name' ) ) . ' <noreply@' . $domain_name . '>',
+        );
+        wp_mail( $post_author->user_email, 'К сожалению, мы не можем опубликовать ваш материал на ' . $domain_name, $html, $headers );
+    }
+}
+add_action( 'pending_to_draft', 'send_denied_post_email', 10, 1 );
 
 function add_admin_post_edit_scripts( $hook ) {
     if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
