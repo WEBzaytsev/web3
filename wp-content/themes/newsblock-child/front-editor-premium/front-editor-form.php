@@ -92,7 +92,7 @@ echo $form_css;
             </div>
         </div>
         <div class="new-post-form__action-link-container">
-            <a class="new-post-form__action-link" href="#">Правила публикации</a>
+            <a class="new-post-form__action-link" href="/guide/">Правила публикации</a>
             <a class="new-post-form__action-link" href="#">Инструкция по работе с редактором</a>
                 
         </div>
