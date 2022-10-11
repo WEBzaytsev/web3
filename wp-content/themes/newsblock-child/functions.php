@@ -666,16 +666,21 @@ add_action( 'wp_ajax_remove_community_post', 'remove_community_post' );
 function send_post_moderation_email( $post_id, $post, $update ) {
     if ( ! $update && 'pending' === $post->post_status ) {
         $post_author = get_userdata( $post->post_author );
+        $domain_name = parse_url( get_site_url(), PHP_URL_HOST );
         if ( $post_author->user_email && is_email( $post_author->user_email ) ) {
-            $content = '<p>Ваша статья &laquo;' . esc_html( $post->post_title ) . '&raquo; была успешно добавлена и отправлена на модерацию. Вы получите уведомление, когда ваша статья будет одобрена.</p>';
+            $user_name = $post_author->first_name;
             ob_start();
-            get_template_part( '/template-parts/email-template', null, [ 'content' => $content ] );
+            get_template_part( '/template-parts/email/pending-post', null, [ 'user_name' => $user_name, 'domain_name' => $domain_name ] );
+            $content = ob_get_clean();
+            ob_start();
+            get_template_part( '/template-parts/email/email-template', null, [ 'content' => $content ] );
             $html = ob_get_clean();
             $headers = array(
                 'Content-Type: text/html; charset=UTF-8',
-                'From: ' . esc_attr( get_bloginfo( 'name' ) ) . ' <noreply@' . parse_url( get_site_url(), PHP_URL_HOST ) . '>',
+                'From: ' . esc_attr( get_bloginfo( 'name' ) ) . ' <noreply@' . $domain_name . '>',
             );
-            wp_mail( $post_author->user_email, 'Статья отправлена на модерацию', $html, $headers );
+            var_dump($content); die;
+            wp_mail( $post_author->user_email, 'Ваш материал на модерации на сайте ' . $domain_name, $html, $headers );
         }
     }
 }
@@ -683,16 +688,21 @@ add_action( 'wp_insert_post', 'send_post_moderation_email', 10, 3 );
 
 function send_post_publish_email( $post ) {
     $post_author = get_userdata( $post->post_author );
+    $domain_name = parse_url( get_site_url(), PHP_URL_HOST );
     if ( $post_author->user_email && is_email( $post_author->user_email ) ) {
-        $content = '<p>Ваша статья &laquo;<a href="' . esc_html( get_permalink( $post->ID ) ) . '">' . esc_html( $post->post_title ) . '</a>&raquo; успешно прошла модерацию и была опубликована.</p>';
+        $user_name = $post_author->first_name;
         ob_start();
-        get_template_part( '/template-parts/email-template', null, [ 'content' => $content ] );
+        get_template_part( '/template-parts/email/published-post', null, [ 'user_name' => $user_name, 'domain_name' => $domain_name, 'post_url' => get_permalink( $post->ID ) ] );
+        $content = ob_get_clean();
+        ob_start();
+        get_template_part( '/template-parts/email/email-template', null, [ 'content' => $content ] );
         $html = ob_get_clean();
         $headers = array(
             'Content-Type: text/html; charset=UTF-8',
-            'From: ' . esc_attr( get_bloginfo( 'name' ) ) . ' <noreply@' . parse_url( get_site_url(), PHP_URL_HOST ) . '>',
+            'From: ' . esc_attr( get_bloginfo( 'name' ) ) . ' <noreply@' . $domain_name . '>',
         );
-        wp_mail( $post_author->user_email, 'Статья успешно опубликована', $html, $headers );
+        var_dump($content); die;
+        wp_mail( $post_author->user_email, 'Ваш материал вышел на ' . $domain_name, $html, $headers );
     }
 }
 add_action( 'pending_to_publish', 'send_post_publish_email', 10, 1 );
