@@ -87,7 +87,7 @@ $scheme = csco_color_scheme(
 
 							<?php
 							if (is_user_logged_in()) {?>
-								<a href="./profile/." class="cs-header__button" ><i class="fa fa-user-o"></i> Личный кабинет </a> 
+								<a href="/profile/." class="cs-header__button" ><i class="fa fa-user-o"></i> Личный кабинет </a> 
 								<a class="cs-header__button" href="<?php echo esc_url(wp_logout_url()); ?>">Выйти</a> <!-- Когда нить надо занести в перевод  -->
 								<?php
 							} else {
