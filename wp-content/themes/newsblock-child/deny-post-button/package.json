@@ -1,0 +1,14 @@
+{
+  "name": "deny-post-button",
+  "version": "1.0.0",
+  "description": "",
+  "devDependencies": {
+    "@wordpress/scripts": "^24.3.0"
+  },
+  "scripts": {
+    "start": "wp-scripts start",
+    "build": "wp-scripts build"
+  },
+  "author": "",
+  "license": "ISC"
+}

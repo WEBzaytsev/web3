@@ -707,7 +707,37 @@ function send_post_publish_email( $post ) {
 }
 add_action( 'pending_to_publish', 'send_post_publish_email', 10, 1 );
 
-function send_denied_post_email( $post ) {
+function deny_post() {
+    $nonce_is_valid = check_ajax_referer( 'deny_post_nonce', 'nonce', false );
+    if ( ! $nonce_is_valid ) {
+        wp_send_json(
+            array(
+                'success' => false,
+                'error'   => 'Invalid nonce',
+            )
+        );
+    }
+    if ( filter_has_var( INPUT_POST, 'post_id' ) ) {
+        $post_id = filter_input( INPUT_POST, 'post_id', FILTER_VALIDATE_INT );
+    } else {
+        wp_send_json(
+            array(
+                'success' => false,
+                'error'   => 'post_id must be specified',
+            )
+        );
+    }
+    $post = get_post( $post_id );
+    if ( ! $post ) {
+        wp_send_json(
+            array(
+                'success' => false,
+                'error'   => 'Post not fount',
+            )
+        );
+    }
+    $post->post_status = 'draft';
+    wp_update_post( $post );
     $post_author = get_userdata( $post->post_author );
     $domain_name = parse_url( get_site_url(), PHP_URL_HOST );
     if ( $post_author->user_email && is_email( $post_author->user_email ) ) {
@@ -724,15 +754,45 @@ function send_denied_post_email( $post ) {
         );
         wp_mail( $post_author->user_email, 'К сожалению, мы не можем опубликовать ваш материал на ' . $domain_name, $html, $headers );
     }
+    wp_send_json(
+        array(
+            'success' => true,
+        )
+    );
 }
-add_action( 'pending_to_draft', 'send_denied_post_email', 10, 1 );
+add_action( 'wp_ajax_deny_post', 'deny_post' );
 
-function add_admin_post_edit_scripts( $hook ) {
+function enqueue_admin_scripts( $hook ) {
     if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
-        wp_enqueue_script( 'custom_post_edit_scripts', get_stylesheet_directory_uri().'/js/admin_post_edit.js', array(), csco_get_theme_data( 'Version' ), true );
+        wp_enqueue_script( 'custom_post_edit_scripts', get_stylesheet_directory_uri() . '/js/admin_post_edit.js', array(), csco_get_theme_data( 'Version' ), true );
+        
+        global $post;
+        if ( $post->post_status == 'pending' ) {
+            $user_meta = get_userdata( $post->post_author );
+            $roles = $user_meta->roles;
+            if ( in_array( 'subsriber', $roles, true ) || in_array( 'contributor', $roles, true ) || in_array( 'author', $roles, true ) ) {
+                wp_register_script(
+                    'gutenberg-deny-post-button',
+                    get_stylesheet_directory_uri() . '/deny-post-button/build/index.js',
+                    array(),
+                    csco_get_theme_data( 'Version' ),
+                    true
+                );
+                $options = [
+                    'ajax_url' => admin_url( 'admin-ajax.php' ),
+                    'deny_post_nonce' => wp_create_nonce('deny_post_nonce'),
+                ];
+                wp_localize_script(
+                    'gutenberg-deny-post-button',
+                    'options',
+                    $options
+                );
+                wp_enqueue_script( 'gutenberg-deny-post-button' );
+            }
+        }
     }
 }
-add_action( 'admin_enqueue_scripts', 'add_admin_post_edit_scripts', 10, 1 );
+add_action( 'admin_enqueue_scripts', 'enqueue_admin_scripts', 10, 1 );
 
 /* Admin user edit page: add hide from users list checkbox */
 function add_admin_user_list_meta( $user ) {
@@ -751,14 +811,14 @@ function save_admin_user_list_meta( $user_id ) {
 add_action( 'personal_options_update', 'save_admin_user_list_meta', 10, 1 );
 add_action( 'edit_user_profile_update', 'save_admin_user_list_meta', 10, 1 );
 /* */
+
 // randomize upload filenames 
 function htg_randomize_uploaded_filename( $filename ) {
-
-  // does it have an extension? grab it
+    // does it have an extension? grab it
     $ext  = empty( pathinfo( $filename )['extension'] ) ? '' : '.' . pathinfo( $filename )['extension'];
 
     // return the first 8 characters of the MD5 hash of the name, along with the extension
     return substr(md5($filename), 0, 8) . $ext;
 }
-
+  
 add_filter( 'sanitize_file_name', 'htg_randomize_uploaded_filename', 10 );
