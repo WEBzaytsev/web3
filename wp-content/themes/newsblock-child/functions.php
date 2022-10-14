@@ -751,3 +751,14 @@ function save_admin_user_list_meta( $user_id ) {
 add_action( 'personal_options_update', 'save_admin_user_list_meta', 10, 1 );
 add_action( 'edit_user_profile_update', 'save_admin_user_list_meta', 10, 1 );
 /* */
+// randomize upload filenames 
+function htg_randomize_uploaded_filename( $filename ) {
+
+  // does it have an extension? grab it
+    $ext  = empty( pathinfo( $filename )['extension'] ) ? '' : '.' . pathinfo( $filename )['extension'];
+
+    // return the first 8 characters of the MD5 hash of the name, along with the extension
+    return substr(md5($filename), 0, 8) . $ext;
+}
+
+add_filter( 'sanitize_file_name', 'htg_randomize_uploaded_filename', 10 );
