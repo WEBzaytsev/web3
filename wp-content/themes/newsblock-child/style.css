@@ -42,9 +42,9 @@ a.link {
   display: none;
 }
 
-.pk-share-buttons-metabar-post .pk-share-buttons-item {
+/* .pk-share-buttons-metabar-post .pk-share-buttons-item {
   padding-left: 21px;
-}
+} */
 
 .cs-footer__nav a:hover, .cs-footer__nav a:active, .cs-footer__nav a:focus {
   color: #7684FA;
