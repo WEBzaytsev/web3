@@ -45,19 +45,19 @@ if ( !isset( $email_vars ) ) {
                                                     <table border="0" cellpadding="0" cellspacing="0" width="144">
                                                         <tr>
                                                             <td width="34">
-                                                                <a href="https://facebook.com/profile.php?id=100086390054633"><img src="http://trianulla.com/wp-content/themes/newsblock-child/images/email/fb.png" alt="Facebook" width="34" height="26" style="display: block;" /></a>
+                                                                <a href="https://facebook.com/profile.php?id=100086390054633"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/fb.png" alt="Facebook" width="34" height="26" style="display: block;" /></a>
                                                             </td>
                                                             <td width="3">&nbsp;</td>
                                                             <td width="34">
-                                                                <a href="https://www.instagram.com/webtree.media"><img src="http://trianulla.com/wp-content/themes/newsblock-child/images/email/in.png" alt="Instagram" width="34" height="26" style="display: block;" /></a>
+                                                                <a href="https://www.instagram.com/webtree.media"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/in.png" alt="Instagram" width="34" height="26" style="display: block;" /></a>
                                                             </td>
                                                             <td width="3">&nbsp;</td>
                                                             <td width="34">
-                                                                <a href="https://twitter.com/webtree_media"><img src="http://trianulla.com/wp-content/themes/newsblock-child/images/email/tw.png" alt="Twitter" width="34" height="26" style="display: block;" /></a>
+                                                                <a href="https://twitter.com/webtree_media"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tw.png" alt="Twitter" width="34" height="26" style="display: block;" /></a>
                                                             </td>
                                                             <td width="3">&nbsp;</td>
                                                             <td width="33">
-                                                                <a href="https://t.me/webtree_media"><img src="http://trianulla.com/wp-content/themes/newsblock-child/images/email/tg.png" alt="Telegram" width="33" height="26" style="display: block;" /></a>
+                                                                <a href="https://t.me/webtree_media"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tg.png" alt="Telegram" width="33" height="26" style="display: block;" /></a>
                                                             </td>
                                                         </tr>
                                                     </table>
