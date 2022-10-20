@@ -19,7 +19,7 @@ $scheme = csco_color_scheme(
 			<div class="cs-footer__col cs-col-left">
 				<div class="cs-footer__inner">
 					<?php csco_component( 'footer_logo' ); ?>(с) 2022
-          <p>Доступно и интересно рассказываем о технологиях, бизнесе и репутации в новой Web3-экономике.</p>
+          <p>Доступно рассказываем об особенностях новой Web3-экономики. Строим коммьюнити. Предлагаем образовательные продукты для бизнеса и IT-специалистов</p>
 					<?php //csco_component( 'footer_social_links' ); ?>
 				</div>
 			</div>
