@@ -29,7 +29,7 @@ if ( !isset( $email_vars ) ) {
                                     <td width="500">
                                         <table border="0" cellpadding="0" cellspacing="0" width="500">
                                             <tr>
-                                                <td width="140" valign="middle">
+                                                <td width="144" valign="middle">
                                                     <img width="140" height="26" border="0" alt="Logo" src="<?= get_stylesheet_directory_uri() ?>/images/email/logo.png" style="display:block" />
                                                 </td>
                                                 <td width="50" valign="middle">&nbsp;</td>
@@ -41,23 +41,23 @@ if ( !isset( $email_vars ) ) {
                                                 <td colspan="3" height="20" width="100%">&nbsp;</td>
                                             </tr>
                                             <tr>
-                                                <td width="140" valign="middle">
-                                                    <table border="0" cellpadding="0" cellspacing="0" width="138">
+                                                <td width="144" valign="middle">
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="144">
                                                         <tr>
-                                                            <td width="30">
-                                                                <a href="https://twitter.com/trianulla"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tw.png" alt="Twitter" width="30" height="30" style="display: block;" /></a>
+                                                            <td width="34">
+                                                                <a href="https://facebook.com/profile.php?id=100086390054633"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/fb.png" alt="Facebook" width="34" height="26" style="display: block;" /></a>
                                                             </td>
-                                                            <td width="6">&nbsp;</td>
-                                                            <td width="30">
-                                                                <a href="https://t.me/trianulla"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tg.png" alt="Telegram" width="30" height="30" style="display: block;" /></a>
+                                                            <td width="3">&nbsp;</td>
+                                                            <td width="34">
+                                                                <a href="https://www.instagram.com/webtree.media"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/in.png" alt="Instagram" width="34" height="26" style="display: block;" /></a>
                                                             </td>
-                                                            <td width="6">&nbsp;</td>
-                                                            <td width="30">
-                                                                <a href="https://vk.com/"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/vk.png" alt="VK" width="30" height="30" style="display: block;" /></a>
+                                                            <td width="3">&nbsp;</td>
+                                                            <td width="34">
+                                                                <a href="https://twitter.com/webtree_media"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tw.png" alt="Twitter" width="34" height="26" style="display: block;" /></a>
                                                             </td>
-                                                            <td width="6">&nbsp;</td>
-                                                            <td width="30">
-                                                                <a href="https://www.linkedin.com/in/"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/in.png" alt="Linkedin" width="30" height="30" style="display: block;" /></a>
+                                                            <td width="3">&nbsp;</td>
+                                                            <td width="33">
+                                                                <a href="https://t.me/webtree_media"><img src="<?= get_stylesheet_directory_uri() ?>/images/email/tg.png" alt="Telegram" width="33" height="26" style="display: block;" /></a>
                                                             </td>
                                                         </tr>
                                                     </table>
