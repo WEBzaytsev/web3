@@ -1697,7 +1697,7 @@ input:checked + .slider:before {
     content: 'ФБ';
 }
 .cs-header__widgets-content .pk-social-links-instagram .pk-social-links-link:before {
-    content: 'ИНС';
+    content: 'ИНСТ';
 }
 .cs-header__widgets-content .pk-social-links-telegram .pk-social-links-link:before {
     content: 'ТГ';
